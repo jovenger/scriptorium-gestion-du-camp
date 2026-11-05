@@ -1,0 +1,34 @@
+GESTION DU CAMP - Scriptorium
+=============================
+
+FRANCAIS
+
+C'est le petit programme du mod Scriptorium (Kingdom Come: Deliverance II). Il est facultatif : sans lui,
+la touche U ouvre le menu du camp dans le jeu. Avec lui, la touche H ouvre une grande fenetre : la banque,
+l'embauche, le plan du camp, le personnel, les metiers, les objectifs. Il s'affiche dans la langue du jeu (francais,
+anglais, allemand, japonais, chinois) ; la liste en haut a droite de sa fenetre en choisit une autre.
+
+1. Dezippez ce dossier ou vous voulez, SAUF dans « Program Files » (par exemple sur le Bureau).
+2. Lancez « Gestion du camp.exe » AVANT de jouer. Le mod Scriptorium doit etre installe.
+3. Dans le jeu, H ouvre et referme le programme. Il trouve le jeu tout seul ; sinon, il demande son dossier.
+
+Il ne s'installe pas, n'a pas besoin des droits d'administrateur, et se ferme quand vous quittez le jeu si sa
+fenetre est cachee. Ses fichiers vont dans %LOCALAPPDATA%\Scriptorium\Gestion du camp.
+
+Un antivirus peut vous avertir : le programme n'est pas signe. C'est a vous de decider si vous lui faites confiance.
+
+ENGLISH
+
+This is the small companion program of the Scriptorium mod (Kingdom Come: Deliverance II). It is optional:
+without it, the U key opens the camp menu inside the game. With it, the H key opens a large window: bank,
+hiring, camp map, staff, trades, objectives. It follows the game's language (French, English, German, Japanese,
+Chinese); the list at the top right of its window chooses another one.
+
+1. Unzip this folder wherever you like, EXCEPT inside "Program Files" (for example on your Desktop).
+2. Run "Gestion du camp.exe" BEFORE you play. The Scriptorium mod must be installed.
+3. In the game, H opens and closes the program. It finds the game by itself; otherwise it asks for its folder.
+
+It installs nothing, needs no administrator rights, and quits when you leave the game if its window is hidden.
+Its files go to %LOCALAPPDATA%\Scriptorium\Gestion du camp.
+
+An antivirus may warn you: the program is not signed. Whether to trust it is your decision.

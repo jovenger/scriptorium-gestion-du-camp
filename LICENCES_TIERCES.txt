@@ -1,0 +1,22 @@
+LICENCES TIERCES / THIRD-PARTY LICENCES
+=======================================
+
+Ce programme s'appuie sur les logiciels suivants. This program relies on the following software.
+
+Qt for Python (PySide6) et Qt 6 - The Qt Company Ltd.
+  Licence : GNU Lesser General Public License v3 (LGPL v3)
+  https://www.gnu.org/licenses/lgpl-3.0.html
+  Sources de PySide6 : https://code.qt.io/cgit/pyside/pyside-setup.git/
+  Sources de Qt : https://code.qt.io/cgit/qt/qt5.git/ et https://download.qt.io/official_releases/qt/
+  Ces bibliotheques restent des fichiers separes dans le dossier _internal : vous pouvez les remplacer par une
+  autre version compatible. These libraries remain separate files in the _internal folder: you may replace them
+  with another compatible version.
+
+Python - Python Software Foundation
+  Licence : Python Software Foundation License
+  https://docs.python.org/3/license.html
+
+PyInstaller - The PyInstaller Development Team
+  Licence : GNU General Public License v2 avec exception pour les programmes construits (bootloader exception) :
+  ce programme n'est pas concerne par la GPL.
+  https://github.com/pyinstaller/pyinstaller/blob/develop/COPYING.txt

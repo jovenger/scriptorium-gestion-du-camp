@@ -1,0 +1,56 @@
+SCRIPTORIUM - © 2026 JoVenGer. Tous droits réservés. All rights reserved.
+=========================================================================
+
+
+FRANÇAIS
+--------
+Ce mod est l'œuvre de JoVenGer. Vous pouvez le télécharger et y jouer librement.
+Il est interdit, sans l'autorisation écrite de son auteur :
+- de modifier ce mod ou l'un de ses fichiers ;
+- de le republier ou de le redistribuer, en tout ou en partie, sur quelque site que ce soit ;
+- de réutiliser son code, ses textes, ses images ou ses autres contenus dans un autre mod.
+
+
+ENGLISH
+-------
+This mod is the work of JoVenGer. You may download it and play it freely.
+Without the author's written permission, you may not:
+- modify this mod or any of its files;
+- re-upload or redistribute it, in whole or in part, on any site;
+- reuse its code, texts, images or other content in another mod.
+
+
+DEUTSCH
+-------
+Diese Mod ist das Werk von JoVenGer. Du darfst sie frei herunterladen und spielen.
+Ohne schriftliche Genehmigung des Autors ist es nicht erlaubt:
+- diese Mod oder eine ihrer Dateien zu verändern;
+- sie ganz oder teilweise auf irgendeiner Seite erneut hochzuladen oder weiterzugeben;
+- ihren Code, ihre Texte, Bilder oder sonstigen Inhalte in einer anderen Mod wiederzuverwenden.
+
+
+日本語
+------
+このModはJoVenGerの作品です。自由にダウンロードしてプレイできます。
+作者の書面による許可なく、次のことを禁じます。
+・このMod、またはそのファイルを改変すること
+・このModの全部または一部を、いかなるサイトにも再アップロード・再配布すること
+・このModのコード、テキスト、画像その他の内容を、ほかのModで再利用すること
+
+
+简体中文
+--------
+本模组是 JoVenGer 的作品。您可以自由下载并游玩。
+未经作者书面许可，禁止：
+- 修改本模组或其中任何文件；
+- 在任何网站上全部或部分重新上传或分发本模组；
+- 在其他模组中重复使用本模组的代码、文本、图片或其他内容。
+
+
+繁體中文
+--------
+本模組是 JoVenGer 的作品。您可以自由下載並遊玩。
+未經作者書面許可，禁止：
+- 修改本模組或其中任何檔案；
+- 在任何網站上全部或部分重新上傳或散布本模組；
+- 在其他模組中重複使用本模組的程式碼、文字、圖片或其他內容。
