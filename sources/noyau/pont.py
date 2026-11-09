@@ -28,9 +28,11 @@
 
 from __future__ import annotations
 
+import atexit
 import os
 import re
 import sys
+import threading
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -117,6 +119,7 @@ class Emetteur:
         self.racine_jeu = Path(racine_jeu) if racine_jeu is not None else None
         self.lot = self._dernier_lot_connu()
         self.cfg = self.fichier.with_suffix(".cfg")
+        self.journal = Path(racine_jeu) / "kcd.log" if racine_jeu is not None else None
 
 
 
@@ -194,6 +197,7 @@ class Emetteur:
                     break
         except (OSError, IndexError, ValueError):
             pass
+        depuis = self._taille_du_journal()
         self.lot += 1
         lignes = [f"# Scriptorium -- {time.strftime('%Y-%m-%d %H:%M:%S')}", f"lot {self.lot}"]
         lignes += [c.strip() for c in commandes if c.strip()]
@@ -261,7 +265,84 @@ class Emetteur:
         except OSError:
             pass
 
+        if any(c.strip() for c in commandes) and depuis is not None:
+            self._couvrir_apres_l_accuse(self.lot, depuis)
         return self.lot
+
+
+
+
+
+
+
+
+
+
+
+    SONDE_S = 0.4
+
+    def _taille_du_journal(self) -> int | None:
+        ""
+        if self.journal is None:
+            return None
+        try:
+            return self.journal.stat().st_size
+        except OSError:
+            return None
+
+    def lot_du_fichier(self) -> int | None:
+        ""
+        try:
+            for ligne in self.fichier.read_text(encoding="utf-8", errors="replace").splitlines():
+                if ligne.lower().startswith("lot "):
+                    return int(ligne.split()[1])
+        except (OSError, IndexError, ValueError):
+            pass
+        return None
+
+    def couvrir(self, lot: int) -> bool:
+        ""
+        with _VERROU_DES_ATTENTES:
+            if _ATTENTES.get(str(self.fichier), (None, None))[1] == lot:
+                del _ATTENTES[str(self.fichier)]
+            if self.lot_du_fichier() != lot:
+                return False
+            try:
+                self.envoyer([])
+            except OSError:
+                return False
+            return True
+
+    def _couvrir_apres_l_accuse(self, lot: int, depuis: int) -> None:
+        with _VERROU_DES_ATTENTES:
+            _ATTENTES[str(self.fichier)] = (self, lot)
+        threading.Thread(target=self._guetter_l_accuse, args=(lot, depuis), daemon=True,
+                         name=f"couverture du lot {lot}").start()
+
+    def _guetter_l_accuse(self, lot: int, position: int) -> None:
+        motif = re.compile(r"scriptorium_recu_%d(?!\d)" % lot)
+        reste = ""
+        while True:
+            time.sleep(self.SONDE_S)
+            if self.lot_du_fichier() != lot:
+                with _VERROU_DES_ATTENTES:
+                    if _ATTENTES.get(str(self.fichier), (None, None))[1] == lot:
+                        del _ATTENTES[str(self.fichier)]
+                return
+            try:
+                if self.journal.stat().st_size < position:
+                    position, reste = 0, ""
+                with open(self.journal, "rb") as f:
+                    f.seek(position)
+                    brut = f.read()
+                    position = f.tell()
+            except OSError:
+                continue
+            texte = reste + brut.decode("utf-8", errors="replace")
+            if motif.search(texte):
+                self.couvrir(lot)
+                return
+            reste = texte[-80:]
 
     def vider(self) -> None:
         ""
@@ -274,8 +355,32 @@ class Emetteur:
         except OSError:
             pass
 
+        lot = self.lot_du_fichier()
+        if lot is not None:
+            try:
+                self.fichier.write_text(f"# Scriptorium -- {time.strftime('%Y-%m-%d %H:%M:%S')}\nlot {lot}\n",
+                                        encoding="utf-8", newline="\n")
+            except OSError:
+                pass
+
     def ping(self) -> int:
         return self.envoyer(["ping"])
+
+
+
+_ATTENTES: dict[str, tuple] = {}
+_VERROU_DES_ATTENTES = threading.RLock()
+
+
+def couvrir_ce_qui_reste() -> int:
+    ""
+
+    with _VERROU_DES_ATTENTES:
+        attentes = list(_ATTENTES.values())
+    return sum(1 for emetteur, lot in attentes if emetteur.couvrir(lot))
+
+
+atexit.register(couvrir_ce_qui_reste)
 
 
 @dataclass

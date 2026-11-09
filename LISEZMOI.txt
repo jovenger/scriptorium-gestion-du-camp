@@ -6,7 +6,8 @@ FRANCAIS
 C'est le petit programme du mod Scriptorium (Kingdom Come: Deliverance II). Il est facultatif : sans lui,
 la touche U ouvre le menu du camp dans le jeu. Avec lui, la touche H ouvre une grande fenetre : la banque,
 l'embauche, le plan du camp, le personnel, les metiers, les objectifs. Il s'affiche dans la langue du jeu (francais,
-anglais, allemand, japonais, chinois) ; la liste en haut a droite de sa fenetre en choisit une autre.
+anglais, allemand, russe, japonais, chinois simplifie et chinois traditionnel) ; la liste en haut a droite de sa fenetre en
+choisit une autre.
 
 1. Dezippez ce dossier ou vous voulez, SAUF dans « Program Files » (par exemple sur le Bureau).
 2. Lancez « Gestion du camp.exe » AVANT de jouer. Le mod Scriptorium doit etre installe.
@@ -21,8 +22,8 @@ ENGLISH
 
 This is the small companion program of the Scriptorium mod (Kingdom Come: Deliverance II). It is optional:
 without it, the U key opens the camp menu inside the game. With it, the H key opens a large window: bank,
-hiring, camp map, staff, trades, objectives. It follows the game's language (French, English, German, Japanese,
-Chinese); the list at the top right of its window chooses another one.
+hiring, camp map, staff, trades, objectives. It follows the game's language (French, English, German, Russian,
+Japanese, Simplified Chinese and Traditional Chinese); the list at the top right of its window chooses another one.
 
 1. Unzip this folder wherever you like, EXCEPT inside "Program Files" (for example on your Desktop).
 2. Run "Gestion du camp.exe" BEFORE you play. The Scriptorium mod must be installed.
@@ -32,3 +33,19 @@ It installs nothing, needs no administrator rights, and quits when you leave the
 Its files go to %LOCALAPPDATA%\Scriptorium\Gestion du camp.
 
 An antivirus may warn you: the program is not signed. Whether to trust it is your decision.
+
+РУССКИЙ
+
+Это небольшая программа мода Scriptorium (Kingdom Come: Deliverance II). Она необязательна: без нее клавиша U
+открывает меню лагеря в игре. С ней клавиша H открывает большое окно: банк, наем, план лагеря, личный состав, ремесла,
+цели. Программа показывается на языке игры (французский, английский, немецкий, русский, японский, упрощенный китайский и
+традиционный китайский); список в правом верхнем углу ее окна выбирает другой язык.
+
+1. Распакуйте эту папку куда угодно, КРОМЕ «Program Files» (например, на рабочий стол).
+2. Запустите «Gestion du camp.exe» ДО начала игры. Мод Scriptorium должен быть установлен.
+3. В игре H открывает и закрывает программу. Она сама находит игру; иначе спрашивает ее папку.
+
+Она ничего не устанавливает, не требует прав администратора и закрывается, когда вы выходите из игры, если ее окно
+скрыто. Ее файлы хранятся в %LOCALAPPDATA%\Scriptorium\Gestion du camp.
+
+Антивирус может вас предупредить: программа не подписана. Доверять ей или нет – решать вам.

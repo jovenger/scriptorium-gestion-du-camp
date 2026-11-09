@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+import datetime as _dt
 import re
 import xml.etree.ElementTree as ET
 import zipfile
@@ -1395,8 +1396,8 @@ def manifeste(nom: str, version: str, description: str) -> str:
         f"    <description>{description}</description>\n"
         "    <author>Scriptorium</author>\n"
         f"    <version>{version}</version>\n"
-        "    <created_on></created_on>\n"
-        "    <dependencies></dependencies>\n"
+        f"    <created_on>{_dt.date.today().isoformat()}</created_on>\n"
+        "    <modifies_level>false</modifies_level>\n"
         "  </info>\n"
         "</kcd_mod>\n"
     )

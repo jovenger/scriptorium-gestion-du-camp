@@ -37,8 +37,9 @@ from noyau.langue_du_programme import T, langue
 
 _LIVRE = RACINE / "choses" / "banque_du_camp" / "panneau.py"
 
-FOND, CARTE, ENCRE, OR, PALE = "#1d1813", "#2a231b", "#eadfc8", "#c9a24d", "#9c8f78"
-VERT, ROUGE = "#8fbf6a", "#d9735b"
+
+from gestion_du_camp import habillage as hb
+from gestion_du_camp.habillage import CARTE, ENCRE, OR, PALE, VERT, ROUGE, FOND
 
 
 
@@ -57,7 +58,9 @@ def a_partager(benefice_net: float, coffre: float, reste_a_payer: float) -> floa
 
 ARTISANS = [("forgeron", "La forge"), ("femmes", "Les bains"), ("coursier", "Le coursier"), ("bois", "Le bûcheron"),
             ("eau", "Le porteur d'eau"), ("chasseurs", "Les chasseurs"), ("jardiniers", "Les jardiniers"),
-            ("taverne", "La taverne"), ("armurier", "L'armurier")]
+            ("taverne", "La taverne"), ("armurier", "L'armurier"),
+
+            ("vivandiere", "La vivandière"), ("boucher", "Le boucher"), ("palefrenier", "Le palefrenier")]
 
 
 
@@ -85,9 +88,25 @@ LIBELLES_CAISSE = {
     "prelevement": "Prélèvement du Directeur",
     "materiel": "Matériel acheté en ville",
     "chevaux": "Nourriture des chevaux",
+
+    "pension.des.chevaux": "Pension des chevaux (versée par le coffre du camp)", "pensiondeschevaux": "Pension des chevaux (versée par le coffre du camp)",
     "sortie": "Ventes au retour d'une sortie",
     "soins": "Soins après bataille",
     "bainduservice": "Bain du service",
+
+    "vivandiere": "Vivres de ses en-cas (pris aux réserves du camp)",
+
+    "vente.oeufs": "Œufs en trop vendus aux vivres du camp", "venteoeufs": "Œufs en trop vendus aux vivres du camp",
+    "achat.poules": "Poules et grain rapportés par le coursier", "achatpoules": "Poules et grain rapportés par le coursier",
+
+
+    "avance.du.coffre": "Avance du coffre du camp (une dette de la caisse)",
+    "courses.du.coursier": "Achats rapportés par le coursier",
+    "dette.remboursee.au.coffre": "Dette remboursée au coffre du camp",
+
+    "achat.viande": "Viande fraîche achetée aux chasseurs", "achatviande": "Viande fraîche achetée aux chasseurs",
+    "vente.viande.salee": "Viande salée vendue aux vivres du camp", "venteviandesalee": "Viande salée vendue aux vivres du camp",
+    "vente.lard": "Lard vendu à la vivandière", "ventelard": "Lard vendu à la vivandière",
 
     "mercenaires.aux.bains": "Bains des mercenaires", "mercenairesauxbains": "Bains des mercenaires",
     "service": "Vie du service (repas, besoins)",
@@ -119,7 +138,10 @@ PRODUITS = {"biere": "de bière", "vin": "de vin", "eau": "d'eau", "boisson": "d
             "pansements": "de pansements", "bain": "d'un bain", "soin": "d'un soin", "reparation": "d'une réparation",
             "legumes": "de légumes", "viande": "de viande", "fer": "de fer", "cuir": "de cuir", "tissu": "de tissu",
             "graines": "de graines", "fleches": "de flèches", "acier": "d'acier", "oeufs": "d'œufs",
-            "peaux": "de peaux", "herbes": "d'herbes", "champignons": "de champignons", "baies": "de baies"}
+            "peaux": "de peaux", "herbes": "d'herbes", "champignons": "de champignons", "baies": "de baies",
+
+            "encas": "d'un en-cas", "poules": "de poules", "poussins": "de poussins",
+            "viande": "de viande fraîche", "viande.salee": "de viande salée", "sel": "de sel", "lard": "de lard", "fourrage": "de fourrage"}
 
 AVEC = {"forgeron": ("la forge", "à la forge", "de la forge"), "femmes": ("les bains", "aux bains", "des bains"),
         "coursier": ("le coursier", "au coursier", "du coursier"), "bois": ("le bûcheron", "au bûcheron", "du bûcheron"),
@@ -128,6 +150,9 @@ AVEC = {"forgeron": ("la forge", "à la forge", "de la forge"), "femmes": ("les 
         "jardiniers": ("les jardiniers", "aux jardiniers", "des jardiniers"),
         "taverne": ("la taverne", "à la taverne", "de la taverne"),
         "armurier": ("l'armurier", "à l'armurier", "de l'armurier"),
+
+        "vivandiere": ("la vivandière", "à la vivandière", "de la vivandière"), "boucher": ("le boucher", "au boucher", "du boucher"),
+        "palefrenier": ("le palefrenier", "au palefrenier", "du palefrenier"),
         "coffre": ("le coffre du camp", "au coffre du camp", "du coffre du camp"),
         "hommes": ("les hommes du camp", "aux hommes du camp", "des hommes du camp"),
         "ville": ("la ville", "en ville", "de la ville"),
@@ -154,7 +179,8 @@ def libelle_caisse(l: str, montant: float = 0.0) -> str:
         return "Mouvement non expliqué"
     texte = LIBELLES_CAISSE.get(base) or base.replace(".", " ").capitalize()
 
-    if not qui or base in ("subsistance", "fondsdulundi", "mise", "materiel", "chevaux"):
+    if not qui or base in ("subsistance", "fondsdulundi", "mise", "materiel", "chevaux",
+                           "avance.du.coffre", "dette.remboursee.au.coffre", "courses.du.coursier"):
         return texte
     return T("{0}, argent reçu {1}", texte, de) if montant >= 0 else T("{0}, argent versé {1}", texte, a)
 
@@ -279,7 +305,8 @@ def phrase_du_coffre(mv: dict, libelle: str, noms: dict | None = None, pct_henry
         return (T("Part du Directeur ({0:g} % du bénéfice)", n) if abs(n - PART_DIRECTEUR) < 0.01
                 else "Part du Directeur sur une mission (le coffre des bandits)")
     if code in d:
-        return d[code]
+
+        return d[code].replace(" à les ", " aux ").replace(" à le ", " au ")
     return T(libelle) + (T(", par {0}", q) if q else "")
 
 
@@ -367,12 +394,17 @@ class PageArtisan(QWidget):
     def remplir(self, livre: dict, origine: int) -> None:
         mouvements = (livre.get("caisses") or {}).get(self.code) or []
         solde = (livre.get("caisses_soldes") or {}).get(self.code)
-        vu = (len(mouvements), mouvements[-1]["h"] if mouvements else None, solde, origine)
+        vu = (len(mouvements), mouvements[-1]["h"] if mouvements else None, solde, origine,
+              (livre.get("caisses_dettes") or {}).get(self.code))
         if vu == self._vu:
             return
         self._vu = vu
         self.solde.setText(T("Solde de la caisse : {0}", gros_fin(solde)) if solde is not None else
                            T("Solde de la caisse : le jeu le dira au prochain relevé (chaque seconde, partie lancée)."))
+
+        dette = (livre.get("caisses_dettes") or {}).get(self.code) or 0
+        if dette > 0.004:
+            self.solde.setText(self.solde.text() + T(" — dette envers le coffre du camp : {0}", gros_fin(dette)))
         lignes = list(reversed(mouvements))[:400]
         self.table.setRowCount(len(lignes))
         for i, mv in enumerate(lignes):
@@ -387,24 +419,7 @@ class FenetreBanque(QWidget):
         super().__init__()
         self.setWindowTitle(T("Banque du camp"))
         self.resize(1000, 700)
-        self.setStyleSheet(f"""
-            QWidget {{ background: {FOND}; color: {ENCRE}; font-family: Georgia; font-size: 11pt; }}
-            QFrame#Carte {{ background: {CARTE}; border: 1px solid #4a3d2c; border-radius: 6px; }}
-            QLabel#Valeur {{ color: {OR}; font-size: 20pt; }}
-            QLabel#Titre {{ color: {PALE}; font-size: 10pt; }}
-            QLabel#Entete {{ color: {OR}; font-size: 22pt; }}
-            QLabel#Note {{ color: {PALE}; font-size: 10pt; }}
-            QLabel#Solde {{ color: {OR}; font-size: 14pt; }}
-            QTableWidget {{ background: {CARTE}; gridline-color: #4a3d2c; border: none; }}
-            QHeaderView::section {{ background: #3a2f22; color: {OR}; border: none; padding: 6px; }}
-            QTabWidget::pane {{ border: 1px solid #4a3d2c; }}
-            QTabBar::tab {{ background: {CARTE}; color: {PALE}; padding: 8px 16px; border: 1px solid #4a3d2c; }}
-            QTabBar::tab:selected {{ background: #3a2f22; color: {OR}; }}
-            QPushButton {{ background: #3a2f22; color: {ENCRE}; border: 1px solid #6b5537; padding: 6px 14px; }}
-            QPushButton:hover {{ color: {OR}; }}
-            QPushButton:disabled {{ color: #5a5040; }}
-            QSpinBox {{ background: {CARTE}; border: 1px solid #6b5537; padding: 4px; min-width: 90px; }}
-        """)
+        self.setStyleSheet(hb.feuille())
         v = QVBoxLayout(self)
         v.setContentsMargins(18, 16, 18, 16)
         v.setSpacing(10)
@@ -471,6 +486,23 @@ class FenetreBanque(QWidget):
         v.addWidget(caisse)
 
 
+        self.apres_un_geste = None
+        self.quand_la_caisse_est_lue = None
+        self.coffre_lu: int | None = None
+        self.bourse_lu: int | None = None
+        self.rang_depot = QHBoxLayout()
+        self.rang_retrait = QHBoxLayout()
+        for rang, titre in ((self.rang_depot, "Mettre au coffre :"), (self.rang_retrait, "Prendre au coffre :")):
+            rang.setSpacing(8)
+            lab = QLabel(T(titre))
+            lab.setObjectName("Titre")
+            lab.setMinimumWidth(170)
+            rang.addWidget(lab)
+            rang.addStretch(1)
+            v.addLayout(rang)
+        self._pieces()
+
+
 
         self.onglets = QTabWidget()
         self.t_mvt = tableau(["Quand (heure du jeu)", "Mouvement", "Montant", "Solde du coffre"])
@@ -534,7 +566,47 @@ class FenetreBanque(QWidget):
         if not m:
             return False
         self.etat_caisse.setText(T("dans le coffre : {0}   ·   sur toi : {1}", gros(int(m.group(1))), gros(int(m.group(2)))))
+        self.coffre_lu, self.bourse_lu = int(m.group(1)), int(m.group(2))
+        self._pieces()
+        if self.quand_la_caisse_est_lue is not None:
+            self.quand_la_caisse_est_lue(self.coffre_lu, self.bourse_lu)
         return True
+
+    MONTANTS = (100, 500, 1000, 5000, 10000)
+
+    def _pieces(self) -> None:
+        ""
+
+        for rang in (self.rang_depot, self.rang_retrait):
+            while rang.count() > 2:
+                w = rang.takeAt(1).widget()
+                if w is not None:
+                    w.deleteLater()
+        bourse, coffre = self.bourse_lu, self.coffre_lu
+        for n in self.MONTANTS:
+            if bourse is None or n <= bourse:
+                self._piece(self.rang_depot, "deposer", n, gros(n), "Piece")
+        if bourse:
+            self._piece(self.rang_depot, "deposer", bourse, T("Tout ce que j'ai sur moi : {0}", gros(bourse)), "Piece")
+        if bourse == 0:
+            self._mot(self.rang_depot, T("Vous n'avez rien sur vous."))
+        for n in self.MONTANTS:
+            if coffre is None or n <= coffre:
+                self._piece(self.rang_retrait, "prendre", n, gros(n), "PieceArgent")
+        if coffre is not None and coffre < self.MONTANTS[0]:
+            self._mot(self.rang_retrait, T("Le coffre n'a pas assez."))
+
+    def _piece(self, rang: QHBoxLayout, geste: str, n: int, texte: str, nom: str) -> None:
+        b = QPushButton(texte)
+        b.setObjectName(nom)
+        b.setCursor(Qt.CursorShape.PointingHandCursor)
+        b.clicked.connect(lambda _=False, g=geste, m=n, w=b: self.bouger_la_caisse(g, m, w))
+        rang.insertWidget(rang.count() - 1, b)
+
+    def _mot(self, rang: QHBoxLayout, texte: str) -> None:
+        lab = QLabel(texte)
+        lab.setObjectName("Note")
+        rang.insertWidget(rang.count() - 1, lab)
 
     def lire_la_caisse(self) -> None:
 
@@ -565,8 +637,8 @@ class FenetreBanque(QWidget):
         if prime:
             self._montrer_prime(prime)
 
-    def bouger_la_caisse(self, geste: str) -> None:
-        n = int(self.montant.value())
+    def bouger_la_caisse(self, geste: str, montant: int | None = None, depuis=None) -> None:
+        n = int(montant) if montant else int(self.montant.value())
         if n <= 0:
             self.etat_caisse.setText(T("Choisis d'abord un montant."))
             return
@@ -591,6 +663,8 @@ class FenetreBanque(QWidget):
                 reste = " (pas plus : le coffre n'en avait pas davantage, ou ta bourse n'en prenait pas " \
                         "plus -- ce qui reste est toujours au coffre)"
             self.etat_caisse.setText(T("{0} {1}{2}.   {3}", gros(n_fait), quoi, reste, texte))
+            if self.apres_un_geste is not None and n_fait > 0:
+                self.apres_un_geste(geste, n_fait, depuis)
         elif "refuse-bourse" in r and geste == "deposer":
             self.etat_caisse.setText(T("Tu n'as pas assez sur toi.   {0}", texte))
         elif "refuse-vide" in r:
@@ -901,12 +975,25 @@ class FenetreBanque(QWidget):
         _du_total = sum(_du.get(k, 0) for k in ("solde", "primes", "autres"))
         _entre = cette_semaine.get("entrees", 0)
         _sorti = cette_semaine.get("sorties", 0)
+
+
+        _jeu = None
+        try:
+            _jeu = mod.semaine_du_jeu()
+        except Exception:
+            _jeu = None
+        if _jeu is not None:
+            _entre, _sorti, _du_total = _jeu["entrees"], _jeu["sorties"], _jeu["du"]
         self._depenses_semaine = _sorti + _du_total
         self._benefice_net = _entre - self._depenses_semaine
+        self._payes_dues = _du_total
         self.c_coffre.valeur.setText(T(gros(livre.get("coffre", 0))))
         self.c_rentrees.valeur.setText(T(gros(_entre)))
         self.c_depenses.valeur.setText(T(gros(-self._depenses_semaine)))
         self.c_semaine.valeur.setText(T(gros(self._benefice_net, True)))
+
+        self.c_semaine.titre.setText(T("bénéfice de la semaine") + "\n"
+                                     + T("dont payes dues : {0}", T(gros(-_du_total, True))))
         self.c_bourses.valeur.setText(T(gros(_du.get("solde", 0) + _du.get("primes", 0))) if _du else "—")
 
         try:

@@ -32,8 +32,9 @@ from noyau.langue_du_programme import T
 JOURNAL = chemins.journal_du_jeu()
 MARQUE = "[ScriptoPersonnel] "
 
-FOND, CARTE, ENCRE, OR, PALE = "#1d1813", "#2a231b", "#eadfc8", "#c9a24d", "#9c8f78"
-VERT, ROUGE, ORANGE = "#8fbf6a", "#d9735b", "#d9a55b"
+
+from gestion_du_camp import habillage as hb
+from gestion_du_camp.habillage import CARTE, ENCRE, OR, PALE, VERT, ROUGE, ORANGE, FOND
 
 
 COLONNES = ["Nom", "Groupe", "Grade", "Niveau\n(sur 30)", "Poste en ce moment", "Besoins",
@@ -203,16 +204,7 @@ class OngletPersonnel(QWidget):
     def __init__(self) -> None:
         super().__init__()
         self.registre: dict | None = None
-        self.setStyleSheet(f"""
-            QWidget {{ background: {FOND}; color: {ENCRE}; font-family: Georgia; font-size: 11pt; }}
-            QLabel#Entete {{ color: {OR}; font-size: 22pt; }}
-            QLabel#Note {{ color: {PALE}; font-size: 10pt; }}
-            QTableWidget {{ background: {CARTE}; gridline-color: #4a3d2c; border: none; }}
-            QHeaderView::section {{ background: #3a2f22; color: {OR}; border: none; padding: 6px; }}
-            QPushButton {{ background: #3a2f22; color: {ENCRE}; border: 1px solid #6b5537; padding: 6px 14px; }}
-            QPushButton:hover {{ color: {OR}; }}
-            QComboBox {{ background: {CARTE}; border: 1px solid #6b5537; padding: 4px 10px; }}
-        """)
+        self.setStyleSheet(hb.feuille())
         v = QVBoxLayout(self)
         v.setContentsMargins(18, 16, 18, 16)
         v.setSpacing(10)
@@ -491,6 +483,7 @@ class OngletPersonnel(QWidget):
         self.table.verticalScrollBar().setValue(defile)
         tous = r["gens"]
         besoin = sum(1 for g in tous if g["besoins"])
+        self.nombre_de_besoins = besoin
         heure = r.get("heure")
         h = f"{int(heure)} h {int((heure % 1) * 60):02d}" if heure is not None else "?"
         self.resume.setText(T("Relevé à {0} (heure du jeu) : {1} personnes au camp, dont {2} mercenaires, {3} compagnons et {4} artisans. {5} ont un besoin.", h, len(tous), sum(1 for g in tous if g['groupe'] == 'Mercenaires'), sum(1 for g in tous if g['groupe'] == 'Compagnons'), sum(1 for g in tous if g['groupe'] == 'Service'), besoin))

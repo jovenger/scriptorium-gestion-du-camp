@@ -30,6 +30,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from noyau import constructeur, jeu, pont
 
 JEU = "KingdomCome.exe"
+
+
+
+FICHIER_DU_JEU_DE_DEVELOPPEMENT = "jeu_de_developpement.txt"
 APPID = "1771300"
 
 
@@ -139,8 +143,19 @@ def malgre_la_troupe(raison: str | None) -> bool:
 class Jeu:
     ""
 
+    @staticmethod
+    def jeu_des_outils():
+        ""
+        try:
+            from noyau import chemins
+            texte = (chemins.dossier_local() / FICHIER_DU_JEU_DE_DEVELOPPEMENT).read_text(encoding="utf-8").strip()
+        except OSError:
+            return None
+        racine = Path(texte)
+        return jeu.Installation(racine=racine, version="outils") if texte and (racine / "Mods").is_dir() else None
+
     def __init__(self) -> None:
-        self.inst = jeu.trouver_jeu()
+        self.inst = Jeu.jeu_des_outils() or jeu.trouver_jeu()
         if self.inst is None:
             raise RuntimeError("installation du jeu introuvable")
         dossier = jeu.cible_reelle(constructeur.dossier_mod(self.inst))

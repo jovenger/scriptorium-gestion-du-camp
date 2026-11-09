@@ -30,8 +30,9 @@ if str(RACINE) not in sys.path:
     sys.path.insert(0, str(RACINE))
 from noyau.langue_du_programme import T, langue
 
-FOND, CARTE, ENCRE, OR, PALE = "#1d1813", "#2a231b", "#eadfc8", "#c9a24d", "#9c8f78"
-VERT, ROUGE = "#8fbf6a", "#d9735b"
+
+from gestion_du_camp import habillage as hb
+from gestion_du_camp.habillage import CARTE, ENCRE, OR, PALE, VERT, ROUGE, FOND
 
 
 RANGS = [("faible", "Recrue", "recrue"), ("moyen", "Confirmé", "confirme"), ("fort", "Vétéran", "veteran")]
@@ -67,6 +68,11 @@ SERVICE = [
 
     ("directeur", "Le Directeur", "le Directeur du camp : ses missions, la banque, les ordres ; il vient au camp, et sur "
      "ton ordre (« Mes ordres », « Posez votre tente ») il pose sa tente et son lit (compris dans la patente)", 0),
+
+    ("palefrenier", "Le palefrenier", "soigne les chevaux de la ligne des chevaux (achète d'abord une ligne, puis ses chevaux)", 1500),
+
+    ("vivandiere", "La vivandière", "vend un en-cas (pain et lard) aux hommes à son comptoir, la recette va au coffre (pose d'abord son comptoir)", 5000),
+    ("boucher", "Le boucher", "débite le gibier des chasseurs : des vivres en plus à chaque retour (pose d'abord son coin)", 5000),
 ]
 
 SANS_RENVOI = {"directeur"}
@@ -112,7 +118,7 @@ def lire_les_prix(choix: dict | None = None) -> dict:
         except (OSError, ValueError):
             choix = {}
     for cle, ou in (("RECRUE", ("rangs", "faible")), ("CONFIRME", ("rangs", "moyen")),
-                    ("VETERAN", ("rangs", "fort")), ("ARCHER", ("archer",)), ("ARBALETRIER", ("arbaletrier",))):
+                    ("VETERAN", ("rangs", "fort")), ("ARCHER", ("archer",)), ("ARCHER", ("arbaletrier",))):
         m_pe = re.search(rf"pe\.{cle}\s*=\s*(\d+)", pe)
         v = choix.get(f"prix_d_embauche.{cle}", int(m_pe.group(1)) if m_pe else None)
         if v is None:
@@ -128,28 +134,20 @@ def gros(n: float) -> str:
     return f"{n:,.0f}".replace(",", " ") + " gros"
 
 
+def sceller(sur, texte: str) -> None:
+    ""
+    try:
+        hb.apposer_un_sceau(sur, T(texte))
+    except Exception:
+        pass
+
+
 class OngletEmbauche(QWidget):
     def __init__(self) -> None:
         super().__init__()
         self.mod = lire_les_prix()
         self.embauches: set[int] = set()
-        self.setStyleSheet(f"""
-            QWidget {{ background: {FOND}; color: {ENCRE}; font-family: Georgia; font-size: 11pt; }}
-            QFrame#Carte {{ background: {CARTE}; border: 1px solid #4a3d2c; border-radius: 6px; }}
-            QLabel#Entete {{ color: {OR}; font-size: 22pt; }}
-            QLabel#Valeur {{ color: {OR}; font-size: 18pt; }}
-            QLabel#Titre {{ color: {PALE}; font-size: 10pt; }}
-            QLabel#Section {{ color: {OR}; font-size: 13pt; }}
-            QTableWidget {{ background: {CARTE}; gridline-color: #4a3d2c; border: none; }}
-            QHeaderView::section {{ background: #3a2f22; color: {OR}; border: none; padding: 6px; }}
-            QPushButton {{ background: #3a2f22; color: {ENCRE}; border: 1px solid #6b5537; padding: 6px 14px; }}
-            QPushButton:hover {{ color: {OR}; }}
-            QPushButton:disabled {{ color: #5a5040; }}
-            QSpinBox {{ background: {CARTE}; border: 1px solid #6b5537; padding: 4px; min-width: 70px; }}
-            QTabWidget::pane {{ border: 1px solid #4a3d2c; }}
-            QTabBar::tab {{ background: #3a2f22; color: {PALE}; padding: 6px 18px; border: 1px solid #4a3d2c; }}
-            QTabBar::tab:selected {{ color: {OR}; background: {CARTE}; }}
-        """)
+        self.setStyleSheet(hb.feuille())
         v = QVBoxLayout(self)
         v.setContentsMargins(18, 16, 18, 16)
         v.setSpacing(10)
@@ -255,6 +253,8 @@ class OngletEmbauche(QWidget):
             t = QLabel()
             t.setTextFormat(Qt.TextFormat.RichText)
             t.setText(T("{0}<br><span style='color:{1}; font-size:9pt'>{2}</span>", texte, PALE, quoi))
+            t.setWordWrap(True)
+            t.setMinimumWidth(260)
             grille.addWidget(t, ligne, 0)
             grille.addWidget(QLabel(T(gros(prix)) if prix > 0 else T("compris dans la patente")), ligne, 1)
             e = QLabel("—")
@@ -268,7 +268,7 @@ class OngletEmbauche(QWidget):
             grille.addWidget(b2, ligne, 4)
             self.service_etat[nom] = e
             self.service_boutons[nom] = (b1, b2)
-        grille.setColumnStretch(5, 1)
+        grille.setColumnStretch(0, 1)
         v.addLayout(grille)
         aide = QLabel(T("Une fois engagés, leur poste et leur tente apparaissent au camp : place-les où tu veux "
                       "dans l'Aménagement du camp, rubriques « Artisans ». Renvoyés, ils partent avec leur tente ; "
@@ -301,11 +301,13 @@ class OngletEmbauche(QWidget):
         if nom == "directeur" and c[0] == "fait":
             self.etat.setText(T("Le Directeur est engagé : il arrive près de ta tente. Parle-lui : « Mes ordres », "
                               "« Posez votre tente » -- il pose sa tente et son lit ; tu pourras la déplacer sur le plan."))
+            sceller(self.etat, "Engagé")
         elif nom == "directeur" and c[0] == "refus" and "_".join(c[1:]) in REFUS_DU_DIRECTEUR:
 
             self.etat.setText(T(REFUS_DU_DIRECTEUR["_".join(c[1:])]))
         elif c[0] == "fait" and len(c) >= 2:
             self.etat.setText(T("{0} : engagé pour {1}, payé par la caisse du camp. Le poste et la tente se montent au camp dans quelques secondes ; place-les dans l'Aménagement du camp, rubriques « Artisans ».", texte, gros(float(c[1]))))
+            sceller(self.etat, "Engagé")
         elif c[0] == "deja":
             self.etat.setText(T("{0} : déjà au camp. La caisse n'a rien payé.", texte))
         elif c[0] == "refus" and len(c) >= 2 and c[1] == "sansforge":
@@ -329,6 +331,15 @@ class OngletEmbauche(QWidget):
         else:
             self.etat.setText(T("Le jeu a répondu : ") + T(r))
         self.actualiser()
+
+    def sortir_les_artisans(self) -> QWidget:
+        ""
+
+        page = self.sous.widget(1)
+        self.sous.removeTab(1)
+        self.sous.tabBar().hide()
+        page.setStyleSheet(hb.feuille())
+        return page
 
     def _carte(self, rang: QHBoxLayout, titre: str) -> QLabel:
         c = QFrame()
@@ -466,6 +477,7 @@ class OngletEmbauche(QWidget):
             venus, paye = int(float(c[1])), int(float(c[2]))
             if venus > 0:
                 self.etat.setText(T("{0} homme(s) engagé(s) pour {1}, payés par la caisse du camp. Ils arrivent à côté d'Henry.", venus, gros(paye)))
+                sceller(self.etat, "Engagé")
             else:
                 self.etat.setText(T("Personne n'est venu : compagnie pleine, ou compagnon déjà engagé "
                                   "(le jeu affiche la raison). La caisse n'a rien payé."))

@@ -457,9 +457,12 @@ ORGANISATION = [
      ["tente_hommes", "tente_carree_verte", "*Tentes", "lit", "lit_haut", "lit_double", "lit_banc"]),
     ("Artisans : postes et ateliers",
      ["place:forge", "place:bains", "place:coursier", "poste_de_chasse", "etal_cueillette", "decor_cart_with_water",
-      "decor_stash_industriall_with_firewood", "pupitre_coursier", "caisse_atelier", "atelier_armurier", "porte_armure"]),
+      "decor_stash_industriall_with_firewood", "pupitre_coursier", "caisse_atelier", "atelier_armurier", "porte_armure",
+      "coin_boucher",
+
+      "ligne_des_chevaux"]),
     ("Artisans : vente et paiement",
-     ["etal_taverne", "etal_jardiniers", "etal_bucheron", "etal_chasseurs", "comptoir_bains"]),
+     ["etal_taverne", "etal_jardiniers", "etal_bucheron", "etal_chasseurs", "comptoir_bains", "etal_vivandiere"]),
     ("Potagers", ["potager_petit", "potager_moyen", "potager_grand"]),
 
 
@@ -467,11 +470,14 @@ ORGANISATION = [
 
     ("Justice du camp", ["pilori"]),
 
-    ("Défense du camp", ["tour_de_guet", "palissade", "porte_palissade"]),
-    ("Feu, cuisine, boisson", ["feu_camp", "*Feu, cuisine, boisson"]),
+    ("Défense du camp", ["tour_de_guet", "palissade", "porte_palissade", "pieux", "brasero"]),
+    ("Feu, cuisine, boisson", ["feu_camp", "feu_de_chambree", "*Feu, cuisine, boisson"]),
     ("S'asseoir et manger", ["*S'asseoir et manger"]),
-    ("Installations et loisirs", ["place:des", "place:des2"] + ["place:" + n for n in INSTALLATIONS_POSABLES]
-     + ["abreuvoir"]),
+    ("Installations et loisirs", ["place:des", "place:des2"] + ["place:" + n for n in INSTALLATIONS_POSABLES]),
+
+    ("Chevaux et bêtes", ["abreuvoir", "chariot_couvert", "chariot_a_bancs", "chariot_de_foin"]),
+
+    ("L'ordre du camp", ["banniere", "pavois", "pavois_b", "pavois_sur_pied", "latrines"]),
     ("Ranger", ["coffre"]),
     ("Lumière", ["*Lumière"]),
 ]
@@ -489,7 +495,42 @@ REFUS_DE_POSE = {
     "directeur_pas_engage": "La tente du Directeur : engage d'abord le Directeur (onglet Embauche, Artisans) ; il la "
                             "pose lui-même, avec son lit.",
     "deja": "Il n'y en a qu'une : elle est déjà au camp.",
+
+
+    "inconnu": "Cet objet n'est pas connu du mod installé : mettez le mod à jour (le programme et le mod doivent être de la même version).",
+    "pas_de_camp": "Le camp n'est pas dressé : rien n'est posé.",
+    "pas_pose": "Le jeu n'a pas pu poser l'objet à cette place : essayez un peu plus loin.",
+    "a_acheter": "Cette installation s'achète d'abord : page « Construire ».",
+
+    "pose_ta_tente_d_abord": "Il n'y a pas encore de camp : pose d'abord ta tente.",
+    "pas_de_mod": "Le mod ne répond pas encore : attendez quelques secondes, puis recommencez.",
+    "pas_de_construction_libre": "La construction du camp n'est pas prête dans le mod : rechargez la partie.",
+    "sans_repere": "Le camp n'a pas pu se repérer ici : essayez un autre endroit.",
+    "rate": "Le jeu n'a pas pu le faire : réessayez.",
 }
+TROP_PRES = "Trop près d'une tente, d'un feu ou de la cuisine : les latrines se posent à 20 m au moins."
+TROP_EN_PENTE = "Le sol est trop en pente ici ({0}°) : on ne dresse pas un camp sur une telle pente. Choisissez un endroit plus plat."
+PAS_ASSEZ = "Le coffre du camp n'a pas assez : il faut {0} gros. Rien n'est posé."
+REFUSE = "Le jeu a refusé : {0}"
+
+
+def refus_en_clair(rep: str | None) -> str | None:
+    ""
+
+    r = (rep or "").strip().replace(" ", "_")
+    if not r or r.isdigit() or r == "ok":
+        return None
+    if r in REFUS_DE_POSE:
+        return T(REFUS_DE_POSE[r])
+    m = re.fullmatch(r"pente_(\d+)", r)
+    if m:
+        return T(TROP_EN_PENTE, m.group(1))
+    if r.startswith("trop_pres"):
+        return T(TROP_PRES)
+    m = re.fullmatch(r"coffre_(\d+)", r)
+    if m:
+        return T(PAS_ASSEZ, m.group(1))
+    return T(REFUSE, r.replace("_", " "))
 
 NOMS_AMENAGEMENT = {
     "place:forge": "Forge (le forgeron)", "place:bains": "Bains et lavoir (les dames des bains)",
@@ -502,6 +543,7 @@ NOMS_AMENAGEMENT = {
     "lit": "Lit bas", "caisse_atelier": "Caisse d'atelier (à réserver à un métier)",
     "pupitre_coursier": "Pupitre du coursier (il y attend les commandes)",
     "bureau_directeur": "Bureau du Directeur (il y travaille entre ses tournées)",
+    "ligne_des_chevaux": "Ligne des chevaux (le poste du palefrenier)",
 
     "tente_henry_vide": "Ta tente, vide (à aménager)",
     "cabane_henry_vide": "Ta cabane, vide (à aménager)",
@@ -533,6 +575,14 @@ NOMS_AMENAGEMENT = {
     "place:arene": "Installation : arène du pugilat", "place:entrainement": "Installation : terrain d'entraînement",
     "place:fleches": "Installation : établi à flèches", "place:baquets": "Installation : bassines",
 }
+
+
+
+
+
+UNIQUES = {"etal_vivandiere", "coin_boucher", "etal_taverne", "comptoir_bains", "pupitre_coursier", "atelier_armurier",
+           "etal_bucheron", "bureau_directeur"}
+DEJA_AU_CAMP = " — déjà au camp"
 
 
 def organiser(cat: list) -> list:
@@ -841,6 +891,12 @@ class Plan(QWidget):
                 k = numero_d_ajout(pc["nom"])
                 if k is not None:
                     brutes.setdefault(k, []).append(pc)
+
+
+            for k, pcs in list(brutes.items()):
+                sans_ancre = [q for q in pcs if not str(q["nom"]).endswith("_ancre")]
+                if sans_ancre:
+                    brutes[k] = sans_ancre
             index, toits = {}, {}
             for k, pcs in brutes.items():
                 cle = str(objets.get(k, {}).get("cle", ""))
@@ -1085,9 +1141,14 @@ class Plan(QWidget):
     def paintEvent(self, _ev) -> None:
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
-        p.fillRect(self.rect(), QColor("#eef0e6"))
+
+        try:
+            from gestion_du_camp import habillage as _hb
+            _hb.peindre_le_parchemin(p, self.rect())
+        except Exception:
+            p.fillRect(self.rect(), QColor("#eadab6"))
         if not self.releve:
-            p.setPen(QColor("#333"))
+            p.setPen(QColor("#3a2716"))
             p.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter,
                        T("Clique sur « Relever le camp » (le jeu doit tourner)."))
             return
@@ -1104,15 +1165,15 @@ class Plan(QWidget):
         p.setFont(QFont("Segoe UI", 7))
         for k in range(int(math.floor(a_bas / pas)) * pas, int(math.ceil(a_haut)) + 1, pas):
             y = self._ecran(k, 0).y()
-            p.setPen(QPen(QColor("#d5d8cc"), 1))
+            p.setPen(QPen(QColor(150, 115, 60, 70), 1))
             p.drawLine(QPointF(0, y), QPointF(self.width(), y))
-            p.setPen(QColor("#777"))
+            p.setPen(QColor("#7a6345"))
             p.drawText(QPointF(4, y - 2), T("{0:+d} m", k))
         for k in range(int(math.floor(c_droite / pas)) * pas, int(math.ceil(c_gauche)) + 1, pas):
             x = self._ecran(0, k).x()
-            p.setPen(QPen(QColor("#d5d8cc"), 1))
+            p.setPen(QPen(QColor(150, 115, 60, 70), 1))
             p.drawLine(QPointF(x, 0), QPointF(x, self.height()))
-            p.setPen(QColor("#777"))
+            p.setPen(QColor("#7a6345"))
             p.drawText(QPointF(x + 2, self.height() - 6), T("{0:+d}", -k))
 
         self._dessiner_la_vegetation(p)
@@ -1412,7 +1473,13 @@ class Fenetre(QMainWindow):
         droite.addWidget(self.remettre_bouton)
         panneau = QWidget()
         panneau.setLayout(droite)
-        panneau.setFixedWidth(290)
+
+
+        panneau.setFixedWidth(400)
+        self.liste.setMinimumHeight(430)
+
+        self.liste.setWordWrap(True)
+        self.liste.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         panneau = self._panneau(panneau)
         milieu = QHBoxLayout()
         milieu.addWidget(self.plan, 1)
@@ -1451,6 +1518,17 @@ class Fenetre(QMainWindow):
         self._constructions = mod.FenetreConstructions(self)
         self._constructions.show()
         self._constructions.actualiser()
+
+    def page_des_constructions(self):
+        ""
+
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("fenetre_constructions", Path(__file__).with_name("fenetre_constructions.py"))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        page = mod.FenetreConstructions(self)
+        page.setWindowFlags(Qt.WindowType.Widget)
+        return page
 
     def _panneau(self, panneau: QWidget) -> QWidget:
         ""
@@ -1499,7 +1577,9 @@ class Fenetre(QMainWindow):
             for o in self.rubriques[i][1]:
 
                 prix = prix_d_un_objet(o["cle"])
-                it = QListWidgetItem(T(o["nom"]) + (T(" — {0} gros", prix) if prix > 0 else T(" — gratuit")))
+                deja = o["cle"] in UNIQUES and any(x.get("cle") == o["cle"] for x in ((self.plan.releve or {}).get("objets") or {}).values())
+                it = QListWidgetItem(T(o["nom"]) + (T(" — {0} gros", prix) if prix > 0 else T(" — gratuit"))
+                                     + (T(DEJA_AU_CAMP) if deja else ""))
                 it.setData(Qt.ItemDataRole.UserRole, o["cle"])
                 image = IMAGES / (o["cle"].replace(":", "_") + ".png")
                 if image.is_file():
@@ -1587,7 +1667,7 @@ class Fenetre(QMainWindow):
                 return
             if rep is not None and not rep.strip().isdigit():
 
-                self.etat.setText(T("Le camp n'a pas pu naître : ") + T(rep.replace("_", " ")) + ".")
+                self.dire_le_refus(T("Le camp n'a pas pu naître : ") + (refus_en_clair(rep) or ""))
                 return
             if rep is not None:
                 self.relever(choisir=int(rep))
@@ -1599,8 +1679,8 @@ class Fenetre(QMainWindow):
                               T("J'installe « {0} »", self.noms_de_la_palette.get(cle, nom)))
             if rep is not None and rep.strip() != "ok":
 
-                self.etat.setText(T("« {0} » n'a pas pu s'installer : ", self.noms_de_la_palette.get(cle, nom))
-                                  + T(rep.replace("_", " ")) + ".")
+                self.dire_le_refus(T("« {0} » n'a pas pu s'installer : ", self.noms_de_la_palette.get(cle, nom))
+                                   + (refus_en_clair(rep) or ""))
                 return
             if rep is not None:
                 self.en_cours.add(nom)
@@ -1611,11 +1691,9 @@ class Fenetre(QMainWindow):
             return
         rep = self._ordre(f'return tostring(scriptorium.editeur.ajouter({jeton}, "{cle}", {avant:.2f}, '
                           f'{cote:.2f}, 0))', T("Je pose « {0} »", self.noms_de_la_palette.get(cle, cle)))
-        if rep is not None and rep.strip().replace(" ", "_") in REFUS_DE_POSE:
-            self.etat.setText(T(REFUS_DE_POSE[rep.strip().replace(" ", "_")]))
-            return
-        if rep is not None and rep.strip().startswith("coffre_"):
-            self.etat.setText(T("Le coffre du camp n'a pas assez : il faut {0} gros. Rien n'est posé.", rep.strip()[7:]))
+        refus = refus_en_clair(rep) if rep is not None else None
+        if refus:
+            self.dire_le_refus(refus)
             return
         if rep is not None:
             self.relever(choisir=int(rep) if rep.strip().isdigit() else None)
@@ -1624,6 +1702,7 @@ class Fenetre(QMainWindow):
         ""
         r = self.plan.releve or {}
         faits = 0
+        refus = []
         for k in sorted(choix, key=str):
             a, c, dt = self.plan.nouvelle_place(k, g)
             if k[0] == "o" and k[1] in r.get("objets", {}):
@@ -1640,9 +1719,14 @@ class Fenetre(QMainWindow):
                 continue
             if rep is None:
                 break
+            dit = refus_en_clair(rep)
+            if dit and dit not in refus:
+                refus.append(dit)
             faits += 1
         self.plan.geste = None
         self.relever()
+        if refus:
+            self.dire_le_refus("\n".join(refus))
 
     def placer_point_de_tir(self, n, avant: float, cote: float) -> None:
         ""
@@ -1768,6 +1852,7 @@ class Fenetre(QMainWindow):
             self.etat.setText(T("Il n'y a pas encore de camp : pose d'abord ta tente."))
             return
         neufs = []
+        refus = []
         for i, o in enumerate(self.presse_papiers):
             jeton = (int(time.time() * 1000) + i) % 1_000_000_000
             rep = self._ordre(f'return tostring(scriptorium.editeur.ajouter({jeton}, "{o["cle"]}", '
@@ -1775,6 +1860,9 @@ class Fenetre(QMainWindow):
                               T("Je colle ({0}/{1})", i + 1, len(self.presse_papiers)))
             if rep is None:
                 break
+            dit = refus_en_clair(rep)
+            if dit and dit not in refus:
+                refus.append(dit)
             if rep.strip().isdigit():
                 neufs.append(int(rep))
                 if o.get("reserve"):
@@ -1784,9 +1872,28 @@ class Fenetre(QMainWindow):
         self.plan.choix = {("o", n) for n in neufs}
         self.montrer_le_choix()
         self.plan.update()
+        if refus:
+            self.dire_le_refus("\n".join(refus))
+
+    def dire_le_refus(self, texte: str) -> None:
+        ""
+        from PyQt6.QtWidgets import QMessageBox
+        self.etat.setText(texte)
+        QMessageBox.warning(self, T("Aménagement du camp"), texte)
 
     def releve_recu(self, r: dict) -> None:
         ""
+
+
+
+
+
+
+
+    def showEvent(self, ev) -> None:
+        super().showEvent(ev)
+        self._decor = None
+        QTimer.singleShot(150, self.relever)
 
 
     def relever_la_vegetation(self) -> None:
@@ -1871,6 +1978,9 @@ class Fenetre(QMainWindow):
                 if self.plan.vegetation is None or not self.plan.vegetation.get("fini"):
                     self.plan.poser_la_vegetation(vegetation_gardee(r))
                 self.releve_recu(r)
+
+                if hasattr(self, "rubrique"):
+                    self._remplir(self.rubrique.currentIndex())
                 return
             QApplication.processEvents()
             time.sleep(0.3)

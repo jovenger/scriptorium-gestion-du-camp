@@ -13,6 +13,9 @@
 
 
 
+
+
+
 scriptorium = scriptorium or {}
 scriptorium.prix_d_embauche = scriptorium.prix_d_embauche or {}
 
@@ -23,12 +26,11 @@ do
 	pe.CONFIRME = 500
 	pe.VETERAN = 1500
 	pe.ARCHER = 750
-	pe.ARBALETRIER = 1000
 
 	local function valeur(v) pcall(function() scriptorium.valeur("prix_d_embauche", v) end) end
 
 	local GENRES = { faible = "RECRUE", moyen = "CONFIRME", fort = "VETERAN", archer = "ARCHER",
-		arbaletrier = "ARBALETRIER" }
+		arbaletrier = "ARCHER" }
 
 	function pe.prix_de(genre)
 		local cle = GENRES[genre]

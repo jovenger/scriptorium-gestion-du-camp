@@ -30,8 +30,9 @@ MARQUE = "[ScriptoMetiers] "
 _LECTEUR = RACINE / "choses" / "tableaux_vivants" / "lecteur.py"
 SIGNE, LECTURE = 20_000, 1_000
 
-FOND, CARTE, ENCRE, OR, PALE = "#1d1813", "#2a231b", "#eadfc8", "#c9a24d", "#9c8f78"
-VERT, ROUGE = "#8fbf6a", "#d9735b"
+
+from gestion_du_camp import habillage as hb
+from gestion_du_camp.habillage import CARTE, ENCRE, OR, PALE, VERT, ROUGE, FOND
 
 COLONNES = ["Métier", "Engagé", "Rapporté aux réserves", "Valeur rapportée", "Paye", "Entretien\ndes outils",
             "Bilan pour le camp", "Racheté par le coursier\nà sa place"]
@@ -91,17 +92,7 @@ class OngletMetiers(QWidget):
     def __init__(self) -> None:
         super().__init__()
         self.journal: dict | None = None
-        self.setStyleSheet(f"""
-            QWidget {{ background: {FOND}; color: {ENCRE}; font-family: Georgia; font-size: 11pt; }}
-            QLabel#Entete {{ color: {OR}; font-size: 22pt; }}
-            QLabel#Section {{ color: {OR}; font-size: 13pt; }}
-            QLabel#Note {{ color: {PALE}; font-size: 10pt; }}
-            QTableWidget {{ background: {CARTE}; gridline-color: #4a3d2c; border: none; }}
-            QHeaderView::section {{ background: #3a2f22; color: {OR}; border: none; padding: 6px; }}
-            QPushButton {{ background: #3a2f22; color: {ENCRE}; border: 1px solid #6b5537; padding: 6px 14px; }}
-            QPushButton:hover {{ color: {OR}; }}
-            QComboBox {{ background: {CARTE}; border: 1px solid #6b5537; padding: 4px 10px; }}
-        """)
+        self.setStyleSheet(hb.feuille())
         v = QVBoxLayout(self)
         v.setContentsMargins(18, 16, 18, 16)
         v.setSpacing(10)

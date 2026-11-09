@@ -433,6 +433,88 @@ def _modele(m: str, x: float = 0.0, y: float = 0.0, rz: float = 0.0) -> dict:
     return {"m": m, "x": x, "y": y, "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": rz, "s": (1.0, 1.0, 1.0)}
 
 
+def ajout(pieces: list[dict], achat: str | None = None) -> list[dict]:
+    ""
+
+
+
+
+    for p in pieces:
+        p["ajout"] = True
+        if achat:
+            p["achat"] = achat
+    return pieces
+
+
+
+
+TABLE_80 = "objects/manmade/common_furniture/tables/table_shabby_d_80_rough.cgf"
+
+
+PIQUET = "objects/manmade/task_specific_props/farming/animal_husbandry/horse_post_tree.cgf"
+RATELIER_A_FOIN = "objects/manmade/structures/industrial/hay/hay_feeder_a.cgf"
+MEULE_A = "objects/manmade/structures/industrial/hay/hay_small_pile_a.cgf"
+MEULE_B = "objects/manmade/structures/industrial/hay/hay_small_pile_b.cgf"
+SEAU = "objects/manmade/common_furniture/bucket/bucket_b.cgf"
+CHARIOT_COUVERT = "objects/manmade/vehicles/wagons/wagon_b_covered.cgf"
+CHARIOT_A_BANCS = "objects/manmade/vehicles/wagons/wagon_a_covered.cgf"
+
+
+
+TABLE_DE_CAMP = "objects/manmade/common_furniture/tables/table_shabby_d_160_rough.cgf"
+TABLE_DE_CAMP_H = 0.75
+CHARIOT_DERRIERE = 3.6
+
+
+
+POULAILLER = "objects/manmade/structures/industrial/coops/coop_a.cgf"
+SAC_DE_GRAIN = "objects/manmade/common_furniture/sacks/sack_a.cgf"
+PANIER_D_OEUFS = "objects/manmade/common_furniture/baskets/basket_eggs.cgf"
+POULAILLER_X, POULAILLER_Y = 0.0, 7.5
+
+
+
+BOITES = {
+    "objects/manmade/structures/municipal/trading/shop_rustic_b.cgf": (-1.72, 1.60, -0.04, 1.04),
+    "objects/manmade/common_furniture/tables/table_shabby_d_160_rough.cgf": (-0.79, 0.81, -0.43, 0.42),
+    "objects/manmade/vehicles/wagons/wagon_b_covered.cgf": (-0.93, 1.07, -0.23, 3.88),
+    "objects/manmade/task_specific_props/trade/counter_a.cgf": (-1.40, 1.40, 0.03, 0.96),
+
+    "objects/manmade/structures/industrial/coops/coop_a.cgf": (-1.43, 0.63, -1.23, 1.14),
+}
+MARGE_DU_CORPS = 0.3
+BOUCHER_PORTIQUE = "Objects/manmade/task_specific_props/food_processing/butchering/butchered_pig_cow_stand.cgf"
+BOUCHER_COCHON = "Objects/manmade/task_specific_props/food_processing/butchering/butchered_pig.cgf"
+BOUCHER_COCHON_Z = 0.0
+BOUCHER_CROCHET = "Objects/manmade/task_specific_props/food_processing/butchering/butcher_hook.cgf"
+BILLOT = "Objects/manmade/task_specific_props/wood_industry/woodcutting/chopping_block/chopping_block.cgf"
+BILLOT_H = 0.55
+COUPERET = "Objects/manmade/task_specific_props/food_processing/butchering/cleaver_a.cgf"
+
+RONDINS_DE_CHAMBREE = ("objects/manmade/common_furniture/benches/low/bench_log_a.cgf",
+                       "objects/manmade/common_furniture/benches/low/bench_log_b.cgf")
+RAYON_DE_CHAMBREE, ECART_DES_PLACES = 2.1, 0.5
+
+
+
+
+
+PIEUX = "Objects/manmade/structures/logistical/barriers/barrier_spikes.cgf"
+BRASERO_CORBEILLE = "Objects/manmade/common_illumination/metal_basket_b.cgf"
+BRASERO_BOIS = "Objects/manmade/task_specific_props/food_processing/cooking/fireplace_wood_c.cgf"
+BRASERO_FLAMME_Z = 0.45
+BRASERO_FEU = {"esAutoPhaseChangeCategory": "fireplace_burning", "sAutoPhaseChangeTimeOfDayPhases": "(7h,1);(20h,2)",
+               "sAutoPhaseChangeWorldTimeDelayStdDev": "10m"}
+
+
+PAVOIS_A = "Objects/manmade/task_specific_props/combat/pavises/pavise_a.cgf"
+PAVOIS_B = "Objects/manmade/task_specific_props/combat/pavises/pavise_b.cgf"
+PAVOIS_SUR_PIED = "Objects/manmade/task_specific_props/combat/pavises/pavise_stick.cgf"
+LATRINES = "Objects/manmade/structures/living/outhouses/latrine_camp_a.cgf"
+CHARIOT_DE_FOIN = "objects/manmade/vehicles/wagons/wagon_c_hay.cgf"
+TABOURET = "objects/manmade/common_furniture/chairs/low/chair_trunk_c.cgf"
+
+
 
 
 
@@ -496,6 +578,28 @@ ETAL = "Objects/manmade/structures/municipal/trading/shop_rustic_b.cgf"
 AUBERGE = "objects/manmade/"
 
 
+def place_hors_des_meubles(objet: dict, marge: float = MARGE_DU_CORPS) -> tuple[list[str], list[str]]:
+    ""
+
+    import math as _m
+    places = [p for p in objet.get("pieces", []) if p.get("so") == "vendeur"]
+    connus, dedans = [], []
+    for p in objet.get("pieces", []):
+        m = str(p.get("m") or "").lower().replace("\\", "/")
+        b = BOITES.get(m)
+        if b is None:
+            continue
+        connus.append(m.rsplit("/", 1)[-1])
+        a = float(p.get("rz") or 0.0)
+        c, s = _m.cos(a), _m.sin(a)
+        for pl in places:
+            dx, dy = float(pl["x"]) - float(p.get("x") or 0.0), float(pl["y"]) - float(p.get("y") or 0.0)
+            lx, ly = c * dx + s * dy, -s * dx + c * dy
+            if b[0] - marge <= lx <= b[1] + marge and b[2] - marge <= ly <= b[3] + marge:
+                dedans.append(m.rsplit("/", 1)[-1])
+    return connus, dedans
+
+
 def place_de_vendeur() -> dict:
     ""
 
@@ -504,6 +608,26 @@ def place_de_vendeur() -> dict:
     return {"so": "vendeur", "x": 0.0, "y": 1.5, "z": 0.0, "rz": 3.141593,
             "guid": "e9cb715f-bdfe-4bbe-8ad8-9f07b6ed9893", "classe": "", "cat": "", "type_lit": "",
             "lecture": "", "sommeil": ""}
+
+
+def rondins_de_chambree() -> list[dict]:
+    ""
+
+
+    import math as _m
+    assise = next((dict(p) for p in aplatir("Bench/bench_1place_low") if p.get("so") == "siege"), None)
+    out: list[dict] = []
+    for k, a_deg in enumerate((90.0, 210.0, 330.0)):
+        a = _m.radians(a_deg)
+        x, y = RAYON_DE_CHAMBREE * _m.cos(a), RAYON_DE_CHAMBREE * _m.sin(a)
+        rz = _m.atan2(-x, y)
+        out.append(_modele(RONDINS_DE_CHAMBREE[k % 2], x, y, rz))
+        if assise is not None:
+            for s in (-ECART_DES_PLACES, ECART_DES_PLACES):
+                place = dict(assise)
+                place.update({"x": x + _m.cos(rz) * s, "y": y + _m.sin(rz) * s, "z": 0.0, "rz": rz})
+                out.append(place)
+    return out
 
 
 def objets_du_camp() -> list[dict]:
@@ -573,7 +697,12 @@ def objets_du_camp() -> list[dict]:
         {"cle": "poste_de_chasse", "nom": "Poste de chasse (l'établi des chasseurs)", "source": "mod",
          "pieces": [{"m": m, "x": fwd, "y": -lat, "z": up, "rx": _m.radians(rx), "ry": _m.radians(ry),
                      "rz": _m.radians(rz), "s": (1.0, 1.0, 1.0)}
-                    for m, fwd, lat, up, rx, ry, rz in POSTE_DE_CHASSE]},
+                    for m, fwd, lat, up, rx, ry, rz in POSTE_DE_CHASSE]
+
+
+                   + ajout([{"m": ETAL, "x": 4.5, "y": 0.0, "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (1.0, 1.0, 1.0)}]
+                           + aplatir("exteriorDecoration/camp_supplies/rope_with_fur", (6.7, 0.6, 0.0))
+                           + [dict(place_de_vendeur(), x=4.5)])},
 
 
 
@@ -582,6 +711,71 @@ def objets_du_camp() -> list[dict]:
 
         {"cle": "abreuvoir", "nom": "Abreuvoir des chevaux", "source": "jeu",
          "pieces": aplatir("animalcare/horseParkingSpot")},
+
+
+
+
+        {"cle": "ligne_des_chevaux", "nom": "Ligne des chevaux (deux places, foin, seaux)", "source": "jeu",
+         "pieces": aplatir("animalcare/horseParkingSpot")
+                   + [_modele(PIQUET, -4.0, 0.0, 0.0), _modele(PIQUET, 4.0, 0.0, 0.0),
+                      _modele(RATELIER_A_FOIN, 6.5, 1.0, _m.radians(90)),
+                      _modele(MEULE_A, -2.5, 1.5, _m.radians(20)), _modele(MEULE_B, 2.5, 1.5, _m.radians(-30)),
+                      _modele(SEAU, -1.0, 1.2, 0.0), _modele(SEAU, 1.0, 1.3, _m.radians(40))]},
+
+
+        {"cle": "chariot_couvert", "nom": "Chariot couvert", "source": "jeu", "pieces": [_modele(CHARIOT_COUVERT)]},
+        {"cle": "chariot_a_bancs", "nom": "Chariot couvert à bancs", "source": "jeu", "pieces": [_modele(CHARIOT_A_BANCS)]},
+        {"cle": "chariot_de_foin", "nom": "Chariot de foin", "source": "jeu", "pieces": [_modele(CHARIOT_DE_FOIN)]},
+
+
+
+        {"cle": "feu_de_chambree", "nom": "Feu de chambrée (foyer, chaudron et trois rondins)", "source": "mod",
+         "pieces": [{"p": MOD_FEU, "x": 0.0, "y": 0.0, "z": 0.0, "rz": 0.0}, _modele(MOD_FEU_DECOR)] + rondins_de_chambree()},
+
+
+
+        {"cle": "etal_vivandiere", "nom": "Table de la vivandière (sa charrette, son poulailler et sa poule, en-cas aux hommes)", "source": "jeu",
+         "pieces": [_modele(TABLE_DE_CAMP)]
+                   + [{"m": "Objects/manmade/" + f, "x": x, "y": y, "z": TABLE_DE_CAMP_H, "rx": 0.0, "ry": 0.0, "rz": rz, "s": (1.0, 1.0, 1.0)}
+                      for f, x, y, rz in (("food/food/bread.cgf", -0.45, 0.05, 0.3), ("food/food/bread_roll.cgf", -0.15, 0.12, 0.0),
+                                          ("food/food/meat_bacon.cgf", 0.25, 0.05, 1.2), ("food/food/cheese_quarter.cgf", 0.5, 0.1, 0.6))]
+                   + [_modele(CHARIOT_COUVERT, -1.82, CHARIOT_DERRIERE, -_m.pi / 2)]
+
+                   + [dict(_modele(POULAILLER, POULAILLER_X, POULAILLER_Y, _m.pi), ajout=True),
+                      dict(_modele(SAC_DE_GRAIN, POULAILLER_X - 1.6, POULAILLER_Y - 0.6, 0.4), ajout=True),
+                      dict(_modele(PANIER_D_OEUFS, POULAILLER_X + 1.5, POULAILLER_Y - 0.7, -0.3), ajout=True)]
+                   + [dict(place_de_vendeur(), y=1.0)]},
+
+
+        {"cle": "coin_boucher", "nom": "Coin du boucher (portique, cochon pendu, billot)", "source": "jeu",
+         "pieces": [_modele(BOUCHER_PORTIQUE),
+                    {"m": BOUCHER_COCHON, "x": 0.0, "y": 0.0, "z": BOUCHER_COCHON_Z, "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (1.0, 1.0, 1.0)},
+                    _modele(BOUCHER_CROCHET, 0.75, 0.0, 0.0), _modele(BILLOT, -1.4, -0.6, 0.4),
+                    {"m": COUPERET, "x": -1.4, "y": -0.6, "z": BILLOT_H, "rx": 0.0, "ry": 0.0, "rz": 0.8, "s": (1.0, 1.0, 1.0)}]},
+
+
+        {"cle": "pieux", "nom": "Chevaux de frise (pieux, 3 m)", "source": "jeu", "pieces": [_modele(PIEUX)]},
+
+
+        {"cle": "brasero", "nom": "Brasero (la corbeille à feu, allumée la nuit)", "source": "jeu",
+         "pieces": [_modele(BRASERO_CORBEILLE),
+                    {"m": BRASERO_BOIS, "x": 0.0, "y": 0.0, "z": 0.35, "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (0.94, 0.94, 0.94)},
+                    {"ent": "RuntimePrefabAutoPhase", "x": 0.0, "y": 0.0, "z": BRASERO_FLAMME_Z, "rz": 0.0, "props": BRASERO_FEU}]},
+
+
+
+        {"cle": "banniere", "nom": "Bannière (la flamme rouge à couronne du jeu)", "source": "jeu", "pieces": aplatir("flag/flag")},
+
+        {"cle": "pavois", "nom": "Pavois peint", "source": "jeu", "pieces": [_modele(PAVOIS_A)]},
+        {"cle": "pavois_b", "nom": "Pavois, second modèle", "source": "jeu", "pieces": [_modele(PAVOIS_B)]},
+
+
+        {"cle": "pavois_sur_pied", "nom": "Pavois sur son pied", "source": "jeu",
+         "pieces": [_modele(PAVOIS_A), _modele(PAVOIS_SUR_PIED)]},
+
+
+        {"cle": "latrines", "nom": "Latrines de camp (à 20 m au moins des tentes, des feux et de la cuisine)", "source": "jeu",
+         "pieces": [_modele(LATRINES)]},
         {"cle": "etal_cueillette", "nom": "Étal du potager (l'établi des jardiniers)", "source": "jeu",
          "pieces": aplatir("profession/apothecary/sortingHerbs")
                    + aplatir("Stash/basket_vegetables_a", (1.6, 0.4, 0.0))
@@ -647,7 +841,11 @@ def objets_du_camp() -> list[dict]:
          "pieces": aplatir("bookstand/bookstand_write")
                    + [{"so": "pupitre", "x": 0.02, "y": -0.46, "z": 0.0, "rz": 0.0,
                        "guid": "48a1d343-43bd-60ca-8814-430e2d4aea9e", "classe": "", "cat": "", "type_lit": "",
-                       "lecture": "", "sommeil": ""}]},
+                       "lecture": "", "sommeil": ""}]
+
+
+                   + ajout([_modele(TABLE_80, 1.4, 0.2, _m.radians(90)), _modele(TABOURET, 1.4, -0.7, 0.0)],
+                           achat="coursier_mobilier")},
 
 
 
@@ -684,6 +882,7 @@ def objets_du_camp() -> list[dict]:
         {"cle": "prie_dieu", "nom": "Prie-Dieu (prier)", "source": "jeu",
          "pieces": [{"m": "Objects/manmade/common_furniture/kneelers/kneeler.cgf", "x": -0.05, "y": -0.85, "z": 0.0,
                      "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (1.0, 1.0, 1.0)}]},
+
 
 
         {"cle": "fumoir", "nom": "Fumoir (fumer la viande)", "source": "jeu",
@@ -882,10 +1081,11 @@ def texte_lua() -> str:
                     ps.append(f'{{ p = "{p["p"]}", x = {_n(p["x"])}, y = {_n(p["y"])}, z = {_n(p["z"])}, '
                               f'rz = {_n(p["rz"])} }}')
                 elif "so" in p:
+                    aj = (", ajout = true" if p.get("ajout") else "") + (f', achat = "{p["achat"]}"' if p.get("achat") else "")
                     ps.append(f'{{ so = "{p["so"]}", x = {_n(p["x"])}, y = {_n(p["y"])}, z = {_n(p["z"])}, '
                               f'rz = {_n(p["rz"])}, guid = "{p["guid"]}", classe = "{p["classe"]}", '
                               f'cat = "{p["cat"]}", type_lit = "{p["type_lit"]}", lecture = "{p["lecture"]}", '
-                              f'sommeil = "{p["sommeil"]}" }}')
+                              f'sommeil = "{p["sommeil"]}"{aj} }}')
                 elif "coffre" in p:
                     ps.append(f'{{ coffre = "{p["coffre"]}", x = 0, y = 0, z = 0 }}')
                 elif "caisse" in p:
@@ -896,7 +1096,9 @@ def texte_lua() -> str:
 
 
                     en_plus = (f', modele = "{p["modele"]}"' if p.get("modele") else "") + \
-                              (f', echelle = {_n(p["echelle"])}' if p.get("echelle") else "")
+                              (f', echelle = {_n(p["echelle"])}' if p.get("echelle") else "") + \
+                              (", props = { " + ", ".join(f'{k} = "{v}"' for k, v in p["props"].items()) + " }"
+                               if p.get("props") else "")
                     ps.append(f'{{ ent = "{p["ent"]}", x = {_n(p["x"])}, y = {_n(p["y"])}, z = {_n(p["z"])}, '
                               f'rz = {_n(p["rz"])}{en_plus} }}')
                 elif "buche" in p:
@@ -909,8 +1111,9 @@ def texte_lua() -> str:
 
 
                     chemin = str(p["m"]).replace(chr(92), "/")
+                    aj = (", ajout = true" if p.get("ajout") else "") + (f', achat = "{p["achat"]}"' if p.get("achat") else "")
                     ps.append(f'{{ m = "{chemin}", x = {_n(p["x"])}, y = {_n(p["y"])}, z = {_n(p["z"])}, '
-                              f'rx = {_n(p["rx"])}, ry = {_n(p["ry"])}, rz = {_n(p["rz"])}{ech}{np} }}')
+                              f'rx = {_n(p["rx"])}, ry = {_n(p["ry"])}, rz = {_n(p["rz"])}{ech}{np} {aj} }}')
             nom = o["nom"].replace('"', "'")
             lignes.append(f'\t["{o["cle"]}"] = {{ nom = "{nom}", pieces = {{ ' + ", ".join(ps) + " } },")
     lignes.append("}")

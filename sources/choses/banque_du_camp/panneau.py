@@ -102,6 +102,9 @@ MOUVEMENTS = {
     "loyer": ("Loyer d'un compagnon", True),
 
 
+    "chevaux": ("Pension des chevaux (versée à la caisse du palefrenier)", False),
+
+
     "depot": ("Déposé au coffre", True),
     "retrait": ("Retiré du coffre", False),
 }
@@ -121,7 +124,7 @@ CAPITAL = ("depot", "retrait")
 NATURE = ("rations", "vente", "porteurs", "caisse_atelier", "prime_caisse", "prime_henry", "prime_versee")
 
 RESERVES = ("vivres", "boisson", "savon", "fer", "charbon", "garde", "pommeau", "rivets", "tissu", "cuir",
-            "tr_armes", "tr_armure", "tr_habits", "tr_bottes", "bois", "pansements", "branches", "graines", "biere", "vin", "acier", "acier_fin")
+            "tr_armes", "tr_armure", "tr_habits", "tr_bottes", "bois", "pansements", "branches", "graines", "biere", "vin", "acier", "acier_fin", "sel", "fourrage")
 
 
 
@@ -133,6 +136,10 @@ COURSES = {
     "trhabits": "Trousses de tailleur", "trbottes": "Trousses de cordonnier",
     "bois": "Bois de chauffe",
     "acier": "Acier (médiocre)", "acierfin": "Acier fin",
+
+    "sel": "Sel",
+
+    "fourrage": "Fourrage",
 }
 PRIX = ("repas", "boisson", "arme", "carquois", "bain", "part", "filles", "forgeron", "reparme", "repbouclier",
         "reparmure", "recrue", "confirme", "veteran", "marge", "prime",
@@ -157,6 +164,69 @@ def _ecrire(livre: dict) -> None:
     tmp = LIVRE.with_suffix(".tmp")
     tmp.write_text(json.dumps(livre, ensure_ascii=False), encoding="utf-8")
     tmp.replace(LIVRE)
+
+
+def effacer_la_branche_abandonnee(livre: dict, h0: int, garder_le_dernier_solde: bool = False) -> int:
+    ""
+
+
+    n = 0
+    j = livre.get("journal") or []
+    garde = [mv for mv in j if int(mv.get("h", 0)) <= h0]
+    n += len(j) - len(garde)
+    livre["journal"] = garde
+    s = livre.get("soldes") or []
+    dernier = s[-1:] if garder_le_dernier_solde else []
+    corps = s[:-1] if garder_le_dernier_solde else s
+    gs = [x for x in corps if int(x[0]) <= h0]
+    n += len(corps) - len(gs)
+    livre["soldes"] = gs + dernier
+    for cle in ("payes",):
+        l = livre.get(cle) or []
+        g = [h for h in l if int(h) <= h0]
+        n += len(l) - len(g)
+        if cle in livre:
+            livre[cle] = g
+    a = livre.get("achats") or []
+    ga = [f for f in a if int(f.get("h", 0)) <= h0]
+    n += len(a) - len(ga)
+    if "achats" in livre:
+        livre["achats"] = ga
+    for code, l in list((livre.get("caisses") or {}).items()):
+        g = [mv for mv in l if int(mv.get("h", 0)) <= h0]
+        n += len(l) - len(g)
+        livre["caisses"][code] = g
+    if n:
+        livre["branches_effacees"] = int(livre.get("branches_effacees", 0)) + n
+    return n
+
+
+
+
+MARQUE_SEMAINE = "[ScriptoSemaine] "
+
+
+def semaine_du_jeu(racine: Path | None = None, queue: int = 3_000_000) -> dict | None:
+    ""
+    racine = racine or racine_du_jeu()
+    if racine is None:
+        return None
+    try:
+        with open(Path(racine) / "kcd.log", "rb") as f:
+            f.seek(0, 2)
+            f.seek(max(0, f.tell() - queue))
+            brut = f.read().decode("utf-8", "replace")
+    except OSError:
+        return None
+    i = brut.rfind(MARQUE_SEMAINE)
+    if i < 0:
+        return None
+    bouts = brut[i + len(MARQUE_SEMAINE):].split("\n", 1)[0].strip().split("|")
+    try:
+        coffre, entrees, sorties, du, benefice = (int(x) for x in bouts[:5])
+    except ValueError:
+        return None
+    return {"coffre": coffre, "entrees": entrees, "sorties": sorties, "du": du, "benefice": benefice}
 
 
 def cle_mvt(mv: dict) -> tuple:
@@ -189,7 +259,7 @@ def appliquer(livre: dict, texte: str, deja: dict | None = None, etats: bool = T
             attente.append([code, don])
             del attente[:-50]
         return True
-    m = re.match(r"banque (mvt|prix|bourses|origine|semaine|reserves|limites|postes|paye|achats|solde|caisse) (.*)$",
+    m = re.match(r"banque (mvt|prix|bourses|origine|semaine|reserves|limites|postes|paye|achats|solde|caisse|dette) (.*)$",
                  texte.strip())
     if not m:
         return False
@@ -209,6 +279,11 @@ def appliquer(livre: dict, texte: str, deja: dict | None = None, etats: bool = T
             deja[cle_mvt(mv)] -= 1
             return True
         livre["journal"].append(mv)
+    elif genre == "dette":
+
+        p = re.match(r"([a-z0-9]+)-(\d+)$", reste)
+        if p:
+            livre.setdefault("caisses_dettes", {})[p.group(1)] = int(p.group(2)) / 100
     elif genre == "caisse":
 
 
@@ -245,6 +320,9 @@ def appliquer(livre: dict, texte: str, deja: dict | None = None, etats: bool = T
                 reprises = livre.setdefault("reprises", [])
                 reprises.append(int(n[0]))
                 del reprises[:-2000]
+
+
+                effacer_la_branche_abandonnee(livre, int(n[0]), garder_le_dernier_solde=True)
     elif genre == "paye":
 
 
@@ -686,6 +764,8 @@ EFFET_AU_COFFRE = {
     "prime_caisse": 0, "prime_henry": 0, "prime_coffre": -1, "prime_versee": 0,
 
     "rancon": 1, "amende": 1,
+
+    "chevaux": -1,
 }
 
 

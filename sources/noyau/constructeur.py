@@ -237,6 +237,10 @@ def installer(inst: jeu.Installation, version: str | None = None) -> ResultatIns
     from . import mise_aux_des as _mise
     contenu.update(_mise.fichiers())
 
+    from . import modeles_a_nous as _ma0
+    _ma0.poser_les_modeles(contenu, [m for m in (_mise.modele(), cerveau_du_feu.modele(inst.racine)) if m])
+
+    _ma0.copier_les_cerveaux(contenu, _mise.PAK_DU_JEU.parent.parent)
 
 
 
@@ -259,6 +263,11 @@ def installer(inst: jeu.Installation, version: str | None = None) -> ResultatIns
 
 
 
+
+
+
+    from . import modeles_a_nous as _ma
+    _ma.ajouter_l_ame_des_chevaux(contenu)
 
 
     pak_du_socle, compte_socle = (_socle.incorporer(contenu) if socle_dedans else ({}, {}))

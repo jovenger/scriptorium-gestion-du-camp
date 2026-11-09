@@ -31,9 +31,11 @@ DOSSIER = RACINE / "gestion_du_camp" / "langues"
 SOURCE = "fr"
 ANGLAIS = "en"
 PAR_LE_JEU = "jeu"
-NOMS = {"fr": "Français", "en": "English", "de": "Deutsch", "ja": "日本語", "zh_hans": "简体中文", "zh_hant": "繁體中文"}
 
-DU_JEU = {"french": "fr", "english": "en", "german": "de", "japanese": "ja", "chineses": "zh_hans", "chineset": "zh_hant"}
+NOMS = {"fr": "Français", "en": "English", "de": "Deutsch", "ru": "Русский", "ja": "日本語", "zh_hans": "简体中文", "zh_hant": "繁體中文"}
+
+DU_JEU = {"french": "fr", "english": "en", "german": "de", "japanese": "ja", "chineses": "zh_hans", "chineset": "zh_hant",
+          "russian": "ru"}
 FICHIER_DU_CHOIX = "langue_du_programme.txt"
 LIGNE_DU_JOURNAL = re.compile(r"\[Localization\] - language from profile: '(\w+)'")
 LETTRES = re.compile(r"[^\W\d_]")

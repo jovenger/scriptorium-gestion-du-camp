@@ -26,8 +26,9 @@ MARQUE = "[ScriptoObjectifs] "
 LECTURE = 5_000
 QUEUE = 4_000_000
 
-FOND, CARTE, ENCRE, OR, PALE = "#1d1813", "#2a231b", "#eadfc8", "#c9a24d", "#9c8f78"
-VERT, ROUGE, ORANGE = "#8fbf6a", "#d9735b", "#d9a55b"
+
+from gestion_du_camp import habillage as hb
+from gestion_du_camp.habillage import CARTE, ENCRE, OR, PALE, VERT, ROUGE, ORANGE, FOND
 FAMILLES = {"economie": "Économie et trésorerie", "securite": "Sécurité et notoriété",
             "infrastructure": "Infrastructure et logistique", "recrutement": "Recrutement et entraînement"}
 FACONS = {"gain": "gagné cette semaine", "niveau": "aujourd'hui", "plafond": "cette semaine (au plus)",
@@ -76,7 +77,7 @@ def lire() -> dict | None:
 class OngletObjectifs(QWidget):
     def __init__(self) -> None:
         super().__init__()
-        self.setStyleSheet(f"background:{FOND}; color:{ENCRE};")
+        self.setStyleSheet(hb.feuille())
         v = QVBoxLayout(self)
         self.titre = QLabel(T("Les objectifs du Directeur"))
         self.titre.setStyleSheet(f"color:{OR}; font-size:18px; font-weight:bold;")
@@ -123,6 +124,10 @@ class OngletObjectifs(QWidget):
         self.table.resizeColumnsToContents()
         tenus = sum(1 for o in obj if o["tenu"])
         jours = d.get("jours")
+
+        self.atteints_sur = T("{0} sur {1}", tenus, len(obj))
+        self.reste_a_faire = (T("{0} atteint(s) sur {1}, {2} jour(s) avant le bilan du Superviseur.", tenus, len(obj), jours)
+                              if tenus < len(obj) and jours is not None else None)
         txt = (T("Semaine {0} : {1} objectif(s) atteint(s) sur {2}", d['semaine'], tenus, len(obj))
                + (T(", {0} jour(s) avant le bilan du Superviseur.", jours) if jours is not None else "."))
         txt += T(" Tous atteints : le Directeur touche une prime. Sinon : un avertissement officiel.")

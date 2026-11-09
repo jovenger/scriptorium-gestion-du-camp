@@ -37,7 +37,17 @@ do
 
 		feu_camp = 20, mannequin_paille = 40, ratelier_camp = 60, bureau_directeur = 400, tour_de_guet = 800,
 
-		rond_client = 50, abreuvoir = 60, poste_de_chasse = 80, etal_cueillette = 80, etal_jardiniers = 100,
+		rond_client = 50, abreuvoir = 60,
+
+		ligne_des_chevaux = 300, chariot_couvert = 300, chariot_a_bancs = 300, chariot_de_foin = 300,
+
+
+		feu_de_chambree = 60, etal_vivandiere = 250, coin_boucher = 200,
+
+		pieux = 100, brasero = 60,
+
+		banniere = 150, pavois = 40, pavois_b = 40, pavois_sur_pied = 40, latrines = 60,
+		poste_de_chasse = 80, etal_cueillette = 80, etal_jardiniers = 100,
 		etal_bucheron = 100, etal_chasseurs = 100, pupitre_coursier = 120, rond_marchand = 150, etal_taverne = 250,
 		comptoir_bains = 300, potager_petit = 80, potager_moyen = 160, potager_grand = 300,
 
@@ -74,6 +84,46 @@ do
 	pr.INSTALLATIONS = { arene = 1200, entrainement = 400, fleches = 300, cuisine = 200, tonneau = 150, banc = 60, baquets = 60,
 		pisser = 40 }
 	pr._payes = pr._payes or {}
+
+
+
+
+
+
+
+
+
+
+	pr.ACHATS = { bains_agrandis = 600, coursier_mobilier = 25, cheval = 700 }
+	pr.REPETABLES = { cheval = true }
+	pr.CLE_CHEVAUX = "ScriptoChevaux2"
+	function pr.chevaux_achetes(m)
+		local s = nil
+		pcall(function() s = m:Relire(pr.CLE_CHEVAUX) end)
+		return math.floor(tonumber(s) or 0)
+	end
+	function pr.noter_un_cheval(m)
+		local ok = false
+		pcall(function() m:Garder(pr.CLE_CHEVAUX, tostring(pr.chevaux_achetes(m) + 1)) ok = true end)
+		return ok
+	end
+	pr.CLE_ACHATS = "ScriptoAchats2"
+	function pr.achats_faits(m)
+		local l, s = {}, nil
+		pcall(function() s = m:Relire(pr.CLE_ACHATS) end)
+		for x in string.gmatch(tostring(s or ""), "[%a_]+") do l[x] = true end
+		return l
+	end
+	function pr.achete(m, nom) return m ~= nil and pr.achats_faits(m)[nom] == true end
+	function pr.noter_l_achat(m, nom)
+		local l, t = pr.achats_faits(m), {}
+		l[nom] = true
+		for k in pairs(l) do t[#t + 1] = k end
+		table.sort(t)
+		local ok = false
+		pcall(function() m:Garder(pr.CLE_ACHATS, (#t > 0) and table.concat(t, ",") or "-") ok = true end)
+		return ok
+	end
 
 	local function valeur(v) pcall(function() scriptorium.valeur("prix_du_camp", v) end) end
 
