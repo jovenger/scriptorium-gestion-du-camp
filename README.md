@@ -1,6 +1,6 @@
 # Scriptorium: Gestion du camp
 
-The source code of **Gestion du camp** (Camp Management) 2.0.0, the optional small Windows program of
+The source code of **Gestion du camp** (Camp Management) 2.1.0, the optional small Windows program of
 [Scriptorium](https://www.nexusmods.com/kingdomcomedeliverance2/mods/3947), a mod by JoVenGer for Kingdom Come: Deliverance II.
 With the mod installed, the H key opens the camp's management in a separate window: a parchment in seven sections, The camp
 today, The chest, The men, The craftsmen, Build, The camp map and The objectives.
@@ -66,7 +66,7 @@ PyQt6 is never included.
 
 ## En français
 
-Le code source de **Gestion du camp** 2.0.0, le petit programme facultatif du mod
+Le code source de **Gestion du camp** 2.1.0, le petit programme facultatif du mod
 [Scriptorium](https://www.nexusmods.com/kingdomcomedeliverance2/mods/3947), de JoVenGer. La touche H ouvre la gestion du camp
 dans une fenêtre à part : un parchemin en sept rubriques.
 
@@ -82,7 +82,7 @@ réservés : voir `LICENCE.txt`.
 
 ## Deutsch
 
-Der Quellcode von **Gestion du camp** (Lagerverwaltung) 2.0.0, dem optionalen kleinen Programm der Mod
+Der Quellcode von **Gestion du camp** (Lagerverwaltung) 2.1.0, dem optionalen kleinen Programm der Mod
 [Scriptorium](https://www.nexusmods.com/kingdomcomedeliverance2/mods/3947) von JoVenGer. Die Taste H öffnet die Lagerverwaltung
 in einem eigenen Fenster: ein Pergament in sieben Rubriken.
 
@@ -97,7 +97,7 @@ nichts. Die englische Liste oben sagt alles, was es auf deinem Computer tut. All
 
 ## Русский
 
-Исходный код **Gestion du camp** («Управление лагерем») 2.0.0, необязательной небольшой программы мода
+Исходный код **Gestion du camp** («Управление лагерем») 2.1.0, необязательной небольшой программы мода
 [Scriptorium](https://www.nexusmods.com/kingdomcomedeliverance2/mods/3947) от JoVenGer. Клавиша H открывает управление лагерем
 в отдельном окне: пергамент из семи разделов.
 
@@ -113,7 +113,7 @@ nichts. Die englische Liste oben sagt alles, was es auf deinem Computer tut. All
 ## 日本語
 
 JoVenGer によるMod [Scriptorium](https://www.nexusmods.com/kingdomcomedeliverance2/mods/3947) の、任意で使える小さなプログラム
-**Gestion du camp**（野営地の管理）2.0.0 のソースコードです。Hキーで野営地の管理が別ウィンドウで開きます。7つの項目の羊皮紙です。
+**Gestion du camp**（野営地の管理）2.1.0 のソースコードです。Hキーで野営地の管理が別ウィンドウで開きます。7つの項目の羊皮紙です。
 
 **入手方法：** [最新版](https://github.com/jovenger/scriptorium-gestion-du-camp/releases/latest)からダウンロードします。「Assets」の
 `Scriptorium_Gestion_du_camp`（`.zip` ファイル）をクリックしてください。「Program Files」以外の好きな場所に展開し、プレイの前に
@@ -126,7 +126,7 @@ JoVenGer によるMod [Scriptorium](https://www.nexusmods.com/kingdomcomedeliver
 ## 简体中文
 
 JoVenGer 的模组 [Scriptorium](https://www.nexusmods.com/kingdomcomedeliverance2/mods/3947) 的可选小程序
-**Gestion du camp**（营地管理）2.0.0 的源代码。按 H 键，营地管理会在单独的窗口中打开：一张分七个栏目的羊皮纸。
+**Gestion du camp**（营地管理）2.1.0 的源代码。按 H 键，营地管理会在单独的窗口中打开：一张分七个栏目的羊皮纸。
 
 **获取方式：** 从[最新版本](https://github.com/jovenger/scriptorium-gestion-du-camp/releases/latest)下载：在“Assets”下点击
 `Scriptorium_Gestion_du_camp` 文件（一个 `.zip`）。解压到“Program Files”以外的任意位置，游戏前运行 `Gestion du camp.exe`，
@@ -139,7 +139,7 @@ Windows 或杀毒软件可能会发出警告。
 ## 繁體中文
 
 JoVenGer 的模組 [Scriptorium](https://www.nexusmods.com/kingdomcomedeliverance2/mods/3947) 的可選小程式
-**Gestion du camp**（營地管理）2.0.0 的原始碼。按 H 鍵，營地管理會在獨立的視窗中開啟：一張分七個欄目的羊皮紙。
+**Gestion du camp**（營地管理）2.1.0 的原始碼。按 H 鍵，營地管理會在獨立的視窗中開啟：一張分七個欄目的羊皮紙。
 
 **取得方式：** 從[最新版本](https://github.com/jovenger/scriptorium-gestion-du-camp/releases/latest)下載：在「Assets」下點擊
 `Scriptorium_Gestion_du_camp` 檔案（一個 `.zip`）。解壓縮到「Program Files」以外的任意位置，遊戲前執行 `Gestion du camp.exe`，

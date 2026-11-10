@@ -53,10 +53,12 @@ SERVICE = [
 
     ("chasseurs", "Les deux chasseurs", "à cheval, le gibier du secteur ; leur poste de chasse", 5000),
 
-    ("jardiniers", "Le jardinier et la jardinière", "bêchent, sèment et récoltent tes potagers ; l'étal du potager", 5000),
+
+    ("jardiniers", "Le jardinier", "bêche, sème et récolte tes potagers ; l'étal du potager ; la jardinière le rejoint si le "
+     "travail déborde 7 jours de suite (payée par sa caisse)", 5000),
     ("eau", "Le porteur d'eau", "au puits, plusieurs voyages par jour ; sa charrette à eau", 5000),
-    ("bois", "Le bûcheron et son assistant", "le bois de chauffe ; ils font au camp le charbon et les branches ; "
-     "leur réserve de bois", 5000),
+    ("bois", "Le bûcheron", "le bois de chauffe, le charbon et les branches ; sa réserve de bois ; son aide le rejoint si le "
+     "travail déborde 7 jours de suite (payé par sa caisse)", 5000),
 
     ("taverne", "Le tavernier", "la bière et le vin au verre ; son étal de tavernier", 5000),
 
@@ -66,13 +68,15 @@ SERVICE = [
     ("armurier", "L'armurier", "répare et ajuste les armures, fabrique les pièces simples ; sa petite forge de camp", 5000),
 
 
-    ("directeur", "Le Directeur", "le Directeur du camp : ses missions, la banque, les ordres ; il vient au camp, et sur "
-     "ton ordre (« Mes ordres », « Posez votre tente ») il pose sa tente et son lit (compris dans la patente)", 0),
+
+    ("directeur", "Le Directeur", "le Directeur du camp : ses missions, la banque, les ordres ; engagé, il pose sa tente et son "
+     "lit à côté de la tienne (compris dans la patente)", 0),
 
     ("palefrenier", "Le palefrenier", "soigne les chevaux de la ligne des chevaux (achète d'abord une ligne, puis ses chevaux)", 1500),
 
-    ("vivandiere", "La vivandière", "vend un en-cas (pain et lard) aux hommes à son comptoir, la recette va au coffre (pose d'abord son comptoir)", 5000),
-    ("boucher", "Le boucher", "débite le gibier des chasseurs : des vivres en plus à chaque retour (pose d'abord son coin)", 5000),
+    ("vivandiere", "La vivandière", "vend un en-cas (pain et lard) aux hommes à son comptoir, payé à sa caisse ; elle rembourse au coffre les vivres pris (pose d'abord son comptoir)", 5000),
+
+    ("boucher", "Le boucher", "achète la viande des chasseurs, la sale à son coin et la fume au fumoir (pose d'abord son coin)", 5000),
 ]
 
 SANS_RENVOI = {"directeur"}
@@ -118,7 +122,7 @@ def lire_les_prix(choix: dict | None = None) -> dict:
         except (OSError, ValueError):
             choix = {}
     for cle, ou in (("RECRUE", ("rangs", "faible")), ("CONFIRME", ("rangs", "moyen")),
-                    ("VETERAN", ("rangs", "fort")), ("ARCHER", ("archer",)), ("ARCHER", ("arbaletrier",))):
+                    ("VETERAN", ("rangs", "fort")), ("ARCHER", ("archer",)), ("ARBALETRIER", ("arbaletrier",))):
         m_pe = re.search(rf"pe\.{cle}\s*=\s*(\d+)", pe)
         v = choix.get(f"prix_d_embauche.{cle}", int(m_pe.group(1)) if m_pe else None)
         if v is None:
@@ -209,6 +213,30 @@ class OngletEmbauche(QWidget):
             self.nombres[tier], self.boutons[tier] = s, bt
         grille.setColumnStretch(4, 1)
         v1.addLayout(grille)
+
+
+
+        titre = QLabel(T("Taille de la compagnie"))
+        titre.setObjectName("Section")
+        v1.addWidget(titre)
+        rang_taille = QHBoxLayout()
+        self.taille = QSpinBox()
+        self.taille.setRange(0, 80)
+        self.taille.setValue(0)
+        self.taille.setToolTip(T("Le Directeur remplace les morts jusqu'à cette taille ; vos embauches l'augmentent."))
+        rang_taille.addWidget(self.taille)
+
+
+        self.bt_taille = QPushButton(T("Appliquer"))
+        self.bt_taille.clicked.connect(self.regler_la_taille)
+        self.bt_taille.setEnabled(False)
+        self.taille.setEnabled(False)
+        rang_taille.addWidget(self.bt_taille)
+        self.v_taille = QLabel(T("La taille n'est pas encore lue dans le jeu : « Appliquer » attend sa vraie valeur."))
+        self.v_taille.setWordWrap(True)
+        rang_taille.addWidget(self.v_taille, 1)
+        v1.addLayout(rang_taille)
+        self._taille_lue = None
 
 
         titre = QLabel(T("Compagnons nommés (un seul de chaque)"))
@@ -404,6 +432,8 @@ class OngletEmbauche(QWidget):
         self._veille.start(self.VEILLE)
         self._cueillette.start(300)
 
+        self._relever_en_fond()
+
     def hideEvent(self, e) -> None:
         super().hideEvent(e)
         if getattr(self, "_veille", None) is not None:
@@ -418,7 +448,8 @@ class OngletEmbauche(QWidget):
             try:
                 r = self._parler("return scriptorium.embauche.etat()")
                 r2 = self._parler("return scriptorium.embauche.etat_du_service()") if r else None
-                self._resultat = (r, r2)
+                r3 = self._parler("return scriptorium.reembauche_des_mercenaires.taille_texte()") if r else None
+                self._resultat = (r, r2, r3)
             finally:
                 self._en_cours = False
         threading.Thread(target=fil, daemon=True).start()
@@ -437,9 +468,47 @@ class OngletEmbauche(QWidget):
             return
         r = self._parler("return scriptorium.embauche.etat()")
         r2 = self._parler("return scriptorium.embauche.etat_du_service()") if r else None
-        self._appliquer(r, r2)
+        r3 = self._parler("return scriptorium.reembauche_des_mercenaires.taille_texte()") if r else None
+        self._appliquer(r, r2, r3)
 
-    def _appliquer(self, r: str | None, r2: str | None) -> None:
+
+
+    def _montrer_la_taille(self, r3: str | None) -> None:
+        c = (r3 or "").split()
+        if len(c) < 3 or c[0] != "taille" or not c[1].isdigit():
+
+            if self._taille_lue is None:
+                self.bt_taille.setEnabled(False)
+                self.taille.setEnabled(False)
+                self.v_taille.setText(T("La taille n'est pas encore lue dans le jeu : « Appliquer » attend sa vraie valeur."))
+            return
+        n = int(c[1])
+        if self._taille_lue is None or (n != self._taille_lue and not self.taille.hasFocus()):
+            self._taille_lue = n
+            self.taille.setValue(n)
+        self.taille.setEnabled(True)
+        self.bt_taille.setEnabled(True)
+        self.v_taille.setText(T("Taille voulue : {0} hommes ; aujourd'hui : {1}. Le Directeur remplace les morts jusqu'à cette "
+                                "taille ; vos embauches l'augmentent.", n, c[2]))
+
+    def regler_la_taille(self) -> None:
+        if self._taille_lue is None:
+            return
+        n = int(self.taille.value())
+        r = self._parler(f"return scriptorium.reembauche_des_mercenaires.regler_la_taille({n})")
+        if self._taille_lue is None:
+            return
+        if not r or not str(r).startswith("taille"):
+            self.etat.setText(T("Le jeu ne répond pas : la taille n'a pas changé."))
+            return
+        try:
+            self._taille_lue = int(str(r).split()[1])
+        except (IndexError, ValueError):
+            self._taille_lue = None
+        self.etat.setText(T("Taille de la compagnie : {0} hommes.", str(r).split()[1]))
+        sceller(self.etat, "Réglé")
+
+    def _appliquer(self, r: str | None, r2: str | None, r3: str | None = None) -> None:
         if not r or not r.startswith("etat"):
             self.etat.setText(T("Le jeu ne répond pas : est-il lancé, et pas en pause ni dans un menu ?"))
             return
@@ -459,6 +528,7 @@ class OngletEmbauche(QWidget):
         if r2 and r2.startswith("service"):
             d = r2.split()[2:]
             self._montrer_le_service({n: (d[i] == "1") for i, (n, _, _, _) in enumerate(SERVICE) if i < len(d)})
+        self._montrer_la_taille(r3)
         self.etat.setText(T("À jour (redemandé au jeu toutes les 10 secondes)."))
 
     def engager(self, genre: str, nombre: int) -> None:

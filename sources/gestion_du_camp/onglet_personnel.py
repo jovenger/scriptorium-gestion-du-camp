@@ -390,7 +390,7 @@ class OngletPersonnel(QWidget):
             if str(RACINE) not in sys.path:
                 sys.path.insert(0, str(RACINE))
             from essais.cycle_en_jeu import Jeu
-            code = f"return tostring(scriptorium.renvoi.renvoyer('{cle}'))"
+            code = f"return tostring(scriptorium.renvoi.renvoyer('{cle}', true))"
             Jeu().emetteur.envoyer(["hex " + code.encode("ascii", "replace").hex()])
         except Exception as err:
             self.resume.setText(T("Le jeu ne répond pas : {0}", err))

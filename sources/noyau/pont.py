@@ -31,7 +31,6 @@ from __future__ import annotations
 import atexit
 import os
 import re
-import sys
 import threading
 import time
 from dataclasses import dataclass
@@ -123,19 +122,9 @@ class Emetteur:
 
 
 
+
+
         self.copies: list[Path] = []
-        if racine_jeu is not None and not getattr(sys, "frozen", False):
-            racine = Path(racine_jeu)
-            for relatif in (
-                "Data/ordres_scriptorium.txt",
-                "ordres_scriptorium.txt",
-            ):
-                chemin = racine / relatif
-                try:
-                    chemin.parent.mkdir(parents=True, exist_ok=True)
-                    self.copies.append(chemin)
-                except OSError:
-                    pass
 
     def _dernier_lot_connu(self) -> int:
         ""

@@ -776,7 +776,7 @@ def objets_du_camp() -> list[dict]:
 
         {"cle": "latrines", "nom": "Latrines de camp (à 20 m au moins des tentes, des feux et de la cuisine)", "source": "jeu",
          "pieces": [_modele(LATRINES)]},
-        {"cle": "etal_cueillette", "nom": "Étal du potager (l'établi des jardiniers)", "source": "jeu",
+        {"cle": "etal_cueillette", "nom": "Étal du potager (l'établi du jardinier)", "source": "jeu",
          "pieces": aplatir("profession/apothecary/sortingHerbs")
                    + aplatir("Stash/basket_vegetables_a", (1.6, 0.4, 0.0))
                    + aplatir("Stash/basket_vegetables_b", (-1.6, 0.4, 0.0))},
@@ -786,7 +786,7 @@ def objets_du_camp() -> list[dict]:
 
 
 
-        {"cle": "etal_jardiniers", "nom": "Étal des jardiniers (vente des légumes)", "source": "jeu",
+        {"cle": "etal_jardiniers", "nom": "Étal du jardinier (vente des légumes)", "source": "jeu",
          "pieces": [{"m": ETAL, "x": 0.0, "y": 0.0, "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (1.0, 1.0, 1.0)}]
                    + aplatir("stash/basket_vegetables_a", (-0.55, 0.55, 0.95))
                    + aplatir("stash/basket_vegetables_b", (0.55, 0.55, 0.95))

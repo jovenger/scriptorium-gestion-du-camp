@@ -16,6 +16,11 @@ from PyQt6.QtWidgets import (QDialog, QGridLayout, QLabel, QMessageBox, QPushBut
 from noyau import chemins
 from noyau.langue_du_programme import T
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+from aides_des_objets import INSTALLATIONS, LIEN_DU_DICTIONNAIRE
+
 NOMS = {"tour": "Tour d'archers", "charrette_d_archers": "Charrette d'archers", "mur": "Palissade", "porte": "Porte de palissade",
         "alchimie": "Atelier d'alchimie", "arene": "Arène", "entrainement": "Terrain d'entraînement", "fleches": "Établi à flèches",
         "cuisine": "Coin cuisine", "tonneau": "Tonneau de vin", "banc": "Banc du camp", "baquets": "Bassines", "pisser": "Feuillée"}
@@ -132,6 +137,11 @@ class FenetreConstructions(QDialog):
         self.v.addWidget(self.titre)
         self.coffre = QLabel(T("Coffre du camp : ?"))
         self.v.addWidget(self.coffre)
+
+        self.lien = QLabel(T("Le dictionnaire du camp, ce que fait chaque objet :")
+                           + f' <a href="{LIEN_DU_DICTIONNAIRE}">{LIEN_DU_DICTIONNAIRE}</a>')
+        self.lien.setOpenExternalLinks(True)
+        self.v.addWidget(self.lien)
         self.grille = QGridLayout()
         self.v.addLayout(self.grille)
 
@@ -179,7 +189,11 @@ class FenetreConstructions(QDialog):
         self.coffre.setText(T("Coffre du camp : {0} gros", coffre))
         self._vider()
         for i, c in enumerate(liste):
-            self.grille.addWidget(QLabel(T("<b>{0}</b>", NOMS.get(c['cle'], c['cle']))), i, 0)
+            etiquette = QLabel(T("<b>{0}</b>", NOMS.get(c['cle'], c['cle'])))
+
+            if c["cle"] in INSTALLATIONS:
+                etiquette.setToolTip(T(INSTALLATIONS[c["cle"]]))
+            self.grille.addWidget(etiquette, i, 0)
             self.grille.addWidget(QLabel(T(ETATS.get(c["etat"], c["etat"]).format(n=c["n"]))), i, 1)
             self.grille.addWidget(QLabel(T("{0} gros", c['prix'])), i, 2)
             a = action_de(c)

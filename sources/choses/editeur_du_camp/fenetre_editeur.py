@@ -39,6 +39,8 @@ from PyQt6.QtWidgets import (QApplication, QCheckBox, QComboBox, QHBoxLayout, QL
                              QListWidgetItem, QMainWindow, QPushButton, QVBoxLayout, QWidget, QSpinBox)
 
 from noyau import chemins
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from aides_des_objets import aide as aide_de_l_objet
 from noyau.langue_du_programme import T
 
 
@@ -536,7 +538,7 @@ NOMS_AMENAGEMENT = {
     "place:forge": "Forge (le forgeron)", "place:bains": "Bains et lavoir (les dames des bains)",
     "place:coursier": "Poste du coursier", "place:des": "Table de dés", "place:des2": "2ᵉ table de dés",
     "poste_de_chasse": "Poste de chasse (l'établi des chasseurs)",
-    "etal_cueillette": "Étal du potager (l'établi des jardiniers)",
+    "etal_cueillette": "Étal du potager (l'établi du jardinier)",
     "decor_cart_with_water": "Charrette à eau (l'établi du porteur d'eau)",
     "decor_stash_industriall_with_firewood": "Réserve de bois (l'établi du bûcheron)",
     "tente_carree_verte": "Grande tente carrée verte", "tente_hommes": "Tente des hommes (4 lits)",
@@ -555,7 +557,7 @@ NOMS_AMENAGEMENT = {
     "prie_dieu": "Prie-Dieu (prier)",
     "fumoir": "Fumoir (fumer la viande)",
     "sechoir": "Séchoir (sécher viande, fruits, herbes)",
-    "etal_jardiniers": "Étal des jardiniers (vente des légumes)",
+    "etal_jardiniers": "Étal du jardinier (vente des légumes)",
     "etal_bucheron": "Étal du bûcheron (vente du bois et du charbon)",
     "etal_chasseurs": "Étal des chasseurs (vente du gibier et des peaux)",
     "comptoir_bains": "Comptoir de la Dame des bains (on la paie ici)",
@@ -1581,6 +1583,11 @@ class Fenetre(QMainWindow):
                 it = QListWidgetItem(T(o["nom"]) + (T(" — {0} gros", prix) if prix > 0 else T(" — gratuit"))
                                      + (T(DEJA_AU_CAMP) if deja else ""))
                 it.setData(Qt.ItemDataRole.UserRole, o["cle"])
+
+                try:
+                    it.setToolTip(T(aide_de_l_objet(o["cle"])))
+                except SystemExit:
+                    pass
                 image = IMAGES / (o["cle"].replace(":", "_") + ".png")
                 if image.is_file():
                     it.setIcon(QIcon(str(image)))
