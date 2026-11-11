@@ -1759,6 +1759,13 @@ class Fenetre(QMainWindow):
             self.etat.setText(T("Choisis d'abord un ou plusieurs objets ajoutés (un lit, une tente…)."))
             return
         valeur = f'"{qui}"' if qui else "false"
+
+        sous = self._ordre("return tostring(scriptorium.editeur.lits_sous_les_tentes({"
+                           + ",".join(str(n) for n in objs) + "}))", "Je change la réservation")
+        if sous is None:
+            return
+        if sous.strip() not in ("-", "nil"):
+            objs += [int(x) for x in sous.strip().split(",") if x.strip().isdigit() and int(x) not in objs]
         refus = 0
         for n in objs:
             rep = self._ordre(f"return tostring(scriptorium.editeur.reserver({n}, {valeur}))", "Je change la réservation")

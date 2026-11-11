@@ -13,12 +13,14 @@ A_SIEGE = "Repos : un homme assis reprend 2 d'énergie par heure ; le colonel ve
 A_TABLE = "Repas : ceux qui mangent debout viennent s'y asseoir. Compte comme table pour la quête."
 A_DECOR = "Décor : aucun effet de jeu."
 A_TENTE = "Abri : sans lit ni siège ; les lits se posent dedans. Aucun autre effet."
+A_TENTE_TOILE = "Abri : un lit posé dessous rend +2 d'énergie par heure. La toile s'use : 0,5 % de son prix par semaine, au coffre."
+A_TENTE_RANG = "Abri : un lit dessous, +2 d'énergie par heure ; le lit du colonel ou du Directeur dessous : +1 de moral au camp. Entretien au coffre."
 AIDES = {
     "tente_henry_vide": "Logement d'Henry : la tente vide ; au plan, réservez-lui le lit qu'on y pose.",
     "coffret_banque": "Argent : touche E, la Banque du camp ; E maintenu, Scriptorium. Les pillards le visent.",
     "mini_tente": "Commandement : touche E, la Gestion du camp.",
     "coffre": "Rangement : un coffre du jeu ; ce qu'on y met reste, et revient à Henry à la vente du camp.",
-    "lit": A_LIT, "lit_haut": "Logement : un lit, ni plus ni moins qu'un lit bas ; sans lit libre, pas de réembauche.", "lit_banc": "Logement : un lit, ni plus ni moins qu'un lit bas ; sans lit libre, pas de réembauche.",
+    "lit": A_LIT, "lit_haut": "Logement : un lit ; au lit, +15 d'énergie par heure (un lit bas : 12) et +1 de moral le lendemain ; sans lit libre, pas de réembauche.", "lit_banc": "Logement : un lit ; au lit, +10 d'énergie par heure (un lit bas : 12) ; sans lit libre, pas de réembauche.",
     "lit_double": "Logement : deux lits. Sans lit libre, pas de réembauche ; au lit, +12 d'énergie par heure.",
     "tente_hommes": "Logement : quatre lits sous une grande tente. Le Directeur ne réengage qu'avec un lit libre.",
     "tente_intendant": "Commandement : le lit du Directeur ; elle se pose seule à son engagement.",
@@ -34,10 +36,11 @@ AIDES = {
     "lanterne": "Lumière : se pose sur une table. Aucun autre effet.", "lampe_table": "Lumière : se pose sur une table. Aucun autre effet.",
     "tour_de_guet": "Défense : un archer y veille la nuit, deux à l'alerte.",
     "porte_palissade": "Défense : le Directeur y met un garde, jour et nuit.",
-    "palissade": A_DECOR, "pieux": A_DECOR, "pavois": A_DECOR, "pavois_b": A_DECOR, "pavois_sur_pied": A_DECOR,
-    "banniere": A_DECOR, "ratelier_garde": A_DECOR, "hallebardes": A_DECOR, "haches": A_DECOR, "table_vaisselle": A_DECOR,
-    "abreuvoir": A_DECOR, "chariot_couvert": A_DECOR, "chariot_a_bancs": A_DECOR, "chariot_de_foin": A_DECOR,
-    "porte_armure": A_DECOR, "latrines": "Décor : aucun effet de jeu ; à 20 m au moins des tentes, des feux et de la cuisine.",
+    "palissade": "Défense : plus de la moitié du tour du camp fermée, plus de vol de nuit, et la diversion des pillards arrive de front.", "pieux": A_DECOR, "pavois": A_DECOR, "pavois_b": A_DECOR, "pavois_sur_pied": A_DECOR,
+    "banniere": "Moral : tant qu'elle est debout, un pillage du camp ou des caisses coûte moitié moins de moral ; aucun ralliement.", "ratelier_garde": A_DECOR, "hallebardes": A_DECOR, "haches": A_DECOR, "table_vaisselle": "Repas : un homme qui mange à une table, à moins de 10 m d'elle, gagne +1 de moral ce jour-là (une fois par jour).",
+    "abreuvoir": "Chevaux : le porteur d'eau le remplit. Sans lui, le palefrenier porte l'eau seau à seau : 1,5 fois plus long par bête.",
+    "chariot_couvert": "Réserve : au camp, les vivres et la boisson se gardent 15 jours au lieu de 10 avant la revente du surplus.", "chariot_a_bancs": A_DECOR, "chariot_de_foin": "Réserve : au camp, le fourrage se garde pour 28 rations par cheval au lieu de 14.",
+    "porte_armure": "Armurier : il y montre son travail ; il vend 6 pièces d'armure par jour au lieu de 4.", "latrines": "Hygiène : au-delà de 20 hommes, sans latrines ni feuillée, le camp se salit et le moral baisse. À 20 m des tentes, des feux et de la cuisine.",
     "mannequin_paille": "Entraînement : un homme libre s'y exerce 120 s ; +6 points de combat.",
     "ratelier": "Entraînement : les duels à l'épée de bois ; chaque combat donne +12 points de combat.",
     "ratelier_camp": "Entraînement : le point d'exercice du matin ; pas de duels.",
@@ -66,7 +69,7 @@ AIDES = {
     "etal_taverne": "Vente : le tavernier y vend bière et vin ; sans cet étal, aucune vente.",
     "tonneau_vin": "Vente : sans lui, la taverne ne vend pas de vin.",
     "tonneau_biere": "Vente : un client sans place à table y tire sa bière.",
-    "table_boisson": "Mise en scène : deux hommes y font semblant de boire.",
+    "table_boisson": "Taverne : deux clients de plus servis à la fois (deux tables au plus) ; deux hommes y boivent.",
     "cuisine": "Mise en scène : les hommes y font semblant de cuisiner ; aucun repas n'y est servi.",
     "cuisine_etageres": "Mise en scène : les hommes y font semblant de cuisiner ; aucun repas n'y est servi.",
     "ligne_des_chevaux": "Chevaux : deux places de cheval ; le palefrenier y travaille. Fourrage et pension à payer.",
@@ -79,6 +82,11 @@ def aide(cle: str, rubrique: str = "") -> str:
     if cle in AIDES:
         return AIDES[cle]
 
+
+    if cle in ("tente_riche", "tente_riche_ouverte", "tente_royale", "tente_royale_ouverte"):
+        return A_TENTE_RANG
+    if cle.startswith("tente_"):
+        return A_TENTE_TOILE
     if rubrique == "Tentes" or cle.startswith(("tente_", "auvent_", "abri_")):
         return A_TENTE
     if cle.startswith("decor_"):
@@ -91,13 +99,13 @@ def aide(cle: str, rubrique: str = "") -> str:
 
 INSTALLATIONS = {
     "arene": "Décor : aucun effet de jeu ; personne n'y est envoyé (les duels se font aux râteliers).",
-    "entrainement": "Mise en scène : deux hommes y font l'exercice à l'épée ; aucun gain.",
-    "fleches": "Mise en scène : un homme y répare des flèches ; aucune flèche n'est fabriquée.",
+    "entrainement": "Exercice : posé, les points gagnés à l'exercice du matin (assauts et tir) valent 10 % de plus ; deux hommes y font l'exercice à l'épée.",
+    "fleches": "Forge : le travail des flèches au taux de l'aide ; le carquois environ 2 gros moins cher ; un homme y répare des flèches.",
     "cuisine": "Mise en scène : quatre places où les hommes touillent et mangent ; aucun repas n'est compté.",
-    "tonneau": "Mise en scène : un homme y fait semblant de boire ; aucun effet.",
-    "banc": "Mise en scène : deux hommes y somnolent ; aucun repos n'est compté.",
+    "tonneau": "Taverne : la réserve de vin double (80 verres au lieu de 40), achetée par le tavernier ; un homme y boit.",
+    "banc": "Repos : deux hommes s'y assoient ; leur repos compte (+2 d'énergie par heure), comme sur un banc posé dans l'Aménagement.",
     "baquets": "Hygiène : deux bassines ; les hommes sales y vont se laver, un à la fois par bassine.",
-    "pisser": "Mise en scène : un homme s'y tient 45 s ; aucun besoin lié.",
+    "pisser": "Hygiène : compte comme des latrines (au-delà de 20 hommes, sans elles, le camp se salit plus vite) ; un homme s'y tient 45 s.",
     "alchimie": "Décor : aucun effet de jeu ; le camp se rebâtit au même endroit pour l'accueillir.",
 }
 

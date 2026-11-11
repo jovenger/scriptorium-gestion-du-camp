@@ -124,7 +124,7 @@ CAPITAL = ("depot", "retrait")
 NATURE = ("rations", "vente", "porteurs", "caisse_atelier", "prime_caisse", "prime_henry", "prime_versee")
 
 RESERVES = ("vivres", "boisson", "savon", "fer", "charbon", "garde", "pommeau", "rivets", "tissu", "cuir",
-            "tr_armes", "tr_armure", "tr_habits", "tr_bottes", "bois", "pansements", "branches", "graines", "biere", "vin", "acier", "acier_fin", "sel", "fourrage")
+            "tr_armes", "tr_armure", "tr_habits", "tr_bottes", "bois", "pansements", "branches", "graines", "biere", "vin", "acier", "acier_fin", "sel", "fourrage", "viande")
 
 
 
@@ -140,6 +140,8 @@ COURSES = {
     "sel": "Sel",
 
     "fourrage": "Fourrage",
+
+    "viande": "Viande de la ville",
 }
 PRIX = ("repas", "boisson", "arme", "carquois", "bain", "part", "filles", "forgeron", "reparme", "repbouclier",
         "reparmure", "recrue", "confirme", "veteran", "marge", "prime",

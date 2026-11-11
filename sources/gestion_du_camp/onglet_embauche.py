@@ -46,8 +46,8 @@ STYLES = [(0, "Au hasard"), (2, "Épée et bouclier"), (3, "Hache et bouclier"),
 
 
 SERVICE = [
-    ("bains", "Les dames des bains", "les bains et le lavoir, et leur tente", 5000),
-    ("forge", "Le forgeron", "sa forge, et sa tente", 5000),
+    ("bains", "Les dames des bains", "les bains et le lavoir, et leur tente ; pour Henry, le bain 1 h, les soins 2 h (deux fois le prix, un pansement), la compagnie 3 h (trois fois)", 5000),
+    ("forge", "Le forgeron", "sa forge, et sa tente ; il répare les pièces sous 15 % (et toutes, sans aide) ; une pièce refaite revient à 60 %", 5000),
     ("coursier", "Le coursier", "les courses du camp et les tiennes ; sa tente", 5000),
 
 
@@ -56,27 +56,28 @@ SERVICE = [
 
     ("jardiniers", "Le jardinier", "bêche, sème et récolte tes potagers ; l'étal du potager ; la jardinière le rejoint si le "
      "travail déborde 7 jours de suite (payée par sa caisse)", 5000),
-    ("eau", "Le porteur d'eau", "au puits, plusieurs voyages par jour ; sa charrette à eau", 5000),
+    ("eau", "Le porteur d'eau", "au puits, plusieurs voyages par jour ; son eau sert aux bains, à la cuisine et au potager ; sa charrette à eau", 5000),
     ("bois", "Le bûcheron", "le bois de chauffe, le charbon et les branches ; sa réserve de bois ; son aide le rejoint si le "
      "travail déborde 7 jours de suite (payé par sa caisse)", 5000),
 
-    ("taverne", "Le tavernier", "la bière et le vin au verre ; son étal de tavernier", 5000),
+    ("taverne", "Le tavernier", "la bière et le vin au verre : +3 et +5 au moral pendant 24 h, 8 au plus ; son étal de tavernier", 5000),
 
     ("aide_forge", "L'aide du forgeron", "les petites réparations à l'établi de la forge, pour que le forgeron "
-     "ait le temps de fabriquer ses armes (il faut la forge)", 1500),
+     "ait le temps de fabriquer ses armes (il faut la forge) ; les pièces entre 15 et 30 %, à 75 % du prix du forgeron ; "
+     "la pièce revient à 60 %, comme chez lui", 1500),
 
-    ("armurier", "L'armurier", "répare et ajuste les armures, fabrique les pièces simples ; sa petite forge de camp", 5000),
+    ("armurier", "L'armurier", "répare et ajuste les armures, fabrique les pièces simples ; sa petite forge de camp ; Henry paie ses armes et armures un peu plus que ce qu'un marchand du jeu en rachète, jamais moins que la moitié de leur prix", 5000),
 
 
 
     ("directeur", "Le Directeur", "le Directeur du camp : ses missions, la banque, les ordres ; engagé, il pose sa tente et son "
      "lit à côté de la tienne (compris dans la patente)", 0),
 
-    ("palefrenier", "Le palefrenier", "soigne les chevaux de la ligne des chevaux (achète d'abord une ligne, puis ses chevaux)", 1500),
+    ("palefrenier", "Le palefrenier", "soigne les chevaux de la ligne des chevaux (achète d'abord une ligne, puis ses chevaux) ; le coffre le paie : 110 par semaine, plus 8 gros par cheval pour le fourrage", 1500),
 
     ("vivandiere", "La vivandière", "vend un en-cas (pain et lard) aux hommes à son comptoir, payé à sa caisse ; elle rembourse au coffre les vivres pris (pose d'abord son comptoir)", 5000),
 
-    ("boucher", "Le boucher", "achète la viande des chasseurs, la sale à son coin et la fume au fumoir (pose d'abord son coin)", 5000),
+    ("boucher", "Le boucher", "achète la viande des chasseurs, la sale à son coin et la fume au fumoir (pose d'abord son coin). Un boucher vit d'un camp d'environ 40 hommes ; en dessous, il vend trop peu pour son salaire", 5000),
 ]
 
 SANS_RENVOI = {"directeur"}
