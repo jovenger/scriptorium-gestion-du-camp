@@ -153,19 +153,50 @@ def vide() -> dict:
     return {"journal": [], "prix": {}, "bourses": 0, "dettes": 0}
 
 
-def lire() -> dict:
+
+
+
+
+
+
+MOTIF_LIGNE_DE_SAUVEGARDE = re.compile(r"Loading saved game '[^']*?saves[/\\](playline\d+)[/\\]")
+
+
+def _dossier_des_lignes() -> Path:
+    return LIVRE.with_name("banque_lignes")
+
+
+def _chemin_du_livre(ligne: str | None) -> Path:
+    return LIVRE if not ligne else _dossier_des_lignes() / f"{ligne}.json"
+
+
+def _lire_fichier(chemin: Path) -> dict:
     try:
-        d = json.loads(LIVRE.read_text(encoding="utf-8"))
+        d = json.loads(chemin.read_text(encoding="utf-8"))
         return d if "journal" in d else vide()
     except Exception:
         return vide()
 
 
-def _ecrire(livre: dict) -> None:
-    LIVRE.parent.mkdir(parents=True, exist_ok=True)
-    tmp = LIVRE.with_suffix(".tmp")
+def lire_le_registre() -> dict:
+    return _lire_fichier(LIVRE)
+
+
+def lire(ligne: str | None = None) -> dict:
+    ""
+    if ligne is None:
+        ligne = lire_le_registre().get("ligne_en_cours")
+    if ligne and _chemin_du_livre(ligne).exists():
+        return _lire_fichier(_chemin_du_livre(ligne))
+    return lire_le_registre()
+
+
+def _ecrire(livre: dict, chemin: Path | None = None) -> None:
+    chemin = chemin or LIVRE
+    chemin.parent.mkdir(parents=True, exist_ok=True)
+    tmp = chemin.with_suffix(".tmp")
     tmp.write_text(json.dumps(livre, ensure_ascii=False), encoding="utf-8")
-    tmp.replace(LIVRE)
+    tmp.replace(chemin)
 
 
 def effacer_la_branche_abandonnee(livre: dict, h0: int, garder_le_dernier_solde: bool = False) -> int:
@@ -392,7 +423,7 @@ def appliquer(livre: dict, texte: str, deja: dict | None = None, etats: bool = T
 
 def inscrire(texte: str) -> bool:
     ""
-    livre = lire()
+    livre = lire_le_registre()
     if not appliquer(livre, texte):
         return False
     _ecrire(livre)
@@ -509,8 +540,17 @@ def rattraper(racine: Path | None = None, commandes: list | None = None) -> int:
     if verrou is None:
         return 0
     try:
-        livre = lire()
+        livre = lire_le_registre()
         lu = livre.setdefault("lu", {})
+        lignes_du_journal = livre.setdefault("lignes_du_journal", {})
+        livres = {}
+
+        def livre_de(ligne):
+            if not ligne:
+                return livre
+            if ligne not in livres:
+                livres[ligne] = _lire_fichier(_chemin_du_livre(ligne))
+            return livres[ligne]
         en_cours = Path(racine) / "kcd.log"
         cle_en_cours = session_de(en_cours)
 
@@ -554,6 +594,7 @@ def rattraper(racine: Path | None = None, commandes: list | None = None) -> int:
             if debut >= taille:
                 continue
             deja = None
+            ligne = lignes_du_journal.get(cle) if debut > 0 else None
             if debut == 0:
                 livre["_reprise"] = True
             if cle not in lu:
@@ -571,13 +612,30 @@ def rattraper(racine: Path | None = None, commandes: list | None = None) -> int:
                 continue
             if not courant:
                 traitees[c.name] = taille
-            for t in _lignes(brut):
-                if t.startswith("banque "):
-                    if appliquer(livre, t, deja, etats=courant):
-                        n += 1
-                elif courant and commandes is not None and t in ("coffret banque", "coffret panneau"):
-                    commandes.append(t)
-        if change:
+            for brute in brut.splitlines():
+                ml = MOTIF_LIGNE_DE_SAUVEGARDE.search(brute)
+                if ml:
+
+
+                    ligne = ml.group(1)
+                    livre_de(ligne)["_reprise"] = True
+                    livre.pop("_reprise", None)
+                    continue
+                for t in _lignes(brute):
+                    if t.startswith("banque "):
+                        cible = livre_de(ligne)
+                        if appliquer(cible, t, deja if cible is livre else None, etats=courant):
+                            n += 1
+                    elif courant and commandes is not None and t in ("coffret banque", "coffret panneau"):
+                        commandes.append(t)
+            lignes_du_journal[cle] = ligne
+            if courant:
+                if livre.get("ligne_en_cours") != ligne:
+                    livre["ligne_en_cours"] = ligne
+                    change = True
+        for ligne, l in livres.items():
+            _ecrire(l, _chemin_du_livre(ligne))
+        if change or livres:
             _ecrire(livre)
         return n
     finally:
@@ -708,6 +766,8 @@ def remettre_a_zero() -> None:
 
 
 
+    registre = lire_le_registre()
+    ligne = registre.get("ligne_en_cours")
     livre = lire()
 
 
@@ -718,7 +778,11 @@ def remettre_a_zero() -> None:
     garde.setdefault("prix", {})
     garde.setdefault("bourses", 0)
     garde.setdefault("dettes", 0)
-    _ecrire({"journal": [], "payes": [], "achats": [], **garde})
+    neuf = {"journal": [], "payes": [], "achats": [], **garde}
+    if ligne and _chemin_du_livre(ligne).exists():
+        _ecrire(neuf, _chemin_du_livre(ligne))
+    else:
+        _ecrire(neuf)
 
 
 def achats_par_semaine(fiches: list[dict], payes: list) -> list[dict]:

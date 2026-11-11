@@ -57,6 +57,8 @@ AIDES = {
     "potager_moyen": "Métier : environ 22 vivres par récolte, si le jardinier est engagé.",
     "potager_grand": "Métier : environ 39 vivres par récolte, si le jardinier est engagé.",
     "coin_boucher": "Métier : l'établi du boucher ; sans lui, il n'achète pas la viande des chasseurs.",
+    "tente_foret_lit": "Abri : la tente de forêt du jeu et sa couche ; un homme y dort (+2 d'énergie par heure). Réservée à Henry, elle devient son lit (E).",
+    "tente_chevaliers": "Abri : la tente des chevaliers et ses deux lits bas ; sous la toile, +2 d'énergie par heure. La toile s'use : 0,5 % de son prix par semaine.",
     "fumoir": "Métier : le boucher y fume sa viande salée ; sans fumoir, pas de viande salée.",
     "sechoir": "Cuisine d'Henry, s'il lui est réservé : il y sèche viande, fruits et herbes.",
     "atelier_armurier": "Métier : l'établi de l'armurier ; sans lui, ni réparation ni fabrication d'armures.",
@@ -98,7 +100,7 @@ def aide(cle: str, rubrique: str = "") -> str:
 
 
 INSTALLATIONS = {
-    "arene": "Décor : aucun effet de jeu ; personne n'y est envoyé (les duels se font aux râteliers).",
+    "arene": "Exercice : les assauts à l'épée de bois s'y tiennent aussi ; mené au bout, l'assaut vaut +18 points au lieu de +12 ; qui regarde : +1 de moral.",
     "entrainement": "Exercice : posé, les points gagnés à l'exercice du matin (assauts et tir) valent 10 % de plus ; deux hommes y font l'exercice à l'épée.",
     "fleches": "Forge : le travail des flèches au taux de l'aide ; le carquois environ 2 gros moins cher ; un homme y répare des flèches.",
     "cuisine": "Mise en scène : quatre places où les hommes touillent et mangent ; aucun repas n'est compté.",
@@ -106,7 +108,7 @@ INSTALLATIONS = {
     "banc": "Repos : deux hommes s'y assoient ; leur repos compte (+2 d'énergie par heure), comme sur un banc posé dans l'Aménagement.",
     "baquets": "Hygiène : deux bassines ; les hommes sales y vont se laver, un à la fois par bassine.",
     "pisser": "Hygiène : compte comme des latrines (au-delà de 20 hommes, sans elles, le camp se salit plus vite) ; un homme s'y tient 45 s.",
-    "alchimie": "Décor : aucun effet de jeu ; le camp se rebâtit au même endroit pour l'accueillir.",
+    "alchimie": "Alchimie : la table d'alchimie du jeu, complète, réservée à Henry ; il y brasse ses potions (touche E). Retirée, elle se repose sans repayer.",
 }
 
 

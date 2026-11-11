@@ -70,6 +70,10 @@ do
 		tente_carree = 300, tente_carree_b = 320, tente_carree_c = 320, tente_carree_verte = 320, tente_couman = 400,
 		tente_yourte = 600, tente_riche = 900, tente_riche_ouverte = 900, tente_royale = 2000, tente_royale_ouverte = 2000,
 
+
+
+		tente_foret_lit = 200, tente_chevaliers = 300,
+
 		palissade = 400, porte_palissade = 1000,
 		decor_cart_with_water = 300, decor_cart_with_things = 300, decor_tent_with_goods_dealer = 300,
 		decor_canopy_small_shop = 150, decor_stash_industriall_with_firewood = 150, decor_stash_industriall_with_crates = 150,

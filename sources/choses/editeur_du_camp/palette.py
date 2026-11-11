@@ -433,6 +433,22 @@ def _modele(m: str, x: float = 0.0, y: float = 0.0, rz: float = 0.0) -> dict:
     return {"m": m, "x": x, "y": y, "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": rz, "s": (1.0, 1.0, 1.0)}
 
 
+COFFRE_DU_JEU = "9731b7cc-034d-44c9-b094-c646cfb03498"
+
+
+def tente_des_chevaliers() -> list[dict]:
+    ""
+
+    out = []
+    for q in aplatir("Tent/tent_knights"):
+        if q.get("p") == COFFRE_DU_JEU:
+            continue
+        if str(q.get("m", "")).lower().endswith("tents/tent_big_round_a.cgf"):
+            q = dict(q, m=TENTES + "tent_big_round_a_color2.cgf")
+        out.append(q)
+    return out
+
+
 def ajout(pieces: list[dict], achat: str | None = None) -> list[dict]:
     ""
 
@@ -686,6 +702,16 @@ def objets_du_camp() -> list[dict]:
          "pieces": [_modele("Objects/manmade/structures/logistical/fences/fence_4rod_gate_02.cgf", x=-1.48, rz=-1.5708)]},
         {"cle": "tente_hommes", "nom": "Tente des hommes (4 lits)", "source": "mod",
          "pieces": [_modele(TENTE_HOMMES)] + lits},
+
+
+
+
+
+
+        {"cle": "tente_foret_lit", "nom": "Tente de forêt et sa couche (le lit du jeu)", "source": "jeu",
+         "pieces": aplatir("Tent/tent_1")},
+        {"cle": "tente_chevaliers", "nom": "Tente des chevaliers (2 lits)", "source": "jeu",
+         "pieces": tente_des_chevaliers()},
         {"cle": "feu_camp", "nom": "Feu de camp et ses 6 bûches", "source": "mod",
          "pieces": [{"p": MOD_FEU, "x": 0.0, "y": 0.0, "z": 0.0, "rz": 0.0}, _modele(MOD_FEU_DECOR)] + buches},
         {"cle": "ratelier_camp", "nom": "Râtelier du camp (armes)", "source": "mod",
