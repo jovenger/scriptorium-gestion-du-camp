@@ -601,7 +601,7 @@
 "Le jeu ne répond pas (25 s) : est-il en pause ou dans un menu ?": "Das Spiel antwortet nicht (25 s): Ist es pausiert oder in einem Menü?",
 "Le camp n'est pas dressé : rien n'a bougé.": "Das Lager ist nicht aufgeschlagen: Nichts hat sich bewegt.",
 "Il n'y a pas encore de camp : pose d'abord TA tente (ou ta cabane), dans « Henry et le Directeur ». Le camp naît là où tu la poses.": "Es gibt noch kein Lager: Stell zuerst DEIN Zelt (oder deine Hütte) auf, unter „Heinrich und der Verwalter“. Das Lager entsteht dort, wo du es aufstellst.",
-"Il te faut d'abord la patente du camp : 30 000 gros, chez le notaire de Kuttenberg (devant l'hôtel de ville) ou de Troskowitz (dans la cour de l'hôtel de ville).": "Zuerst brauchst du das Lagerpatent: 30 000 Groschen, beim Notar in Kuttenberg (vor dem Rathaus) oder in Troskowitz (im Hof des Rathauses).",
+"Il te faut d'abord la patente du camp : 20 000 gros, chez le notaire de Kuttenberg (devant l'hôtel de ville) ou de Troskowitz (dans la cour de l'hôtel de ville).": "Zuerst brauchst du das Lagerpatent: 20 000 Groschen, beim Notar in Kuttenberg (vor dem Rathaus) oder in Troskowitz (im Hof des Rathauses).",
 "Le coffre du camp n'a pas assez pour fonder le camp ici : il faut {0} gros. Rien n'est posé (ta tente, elle, est gratuite).": "Die Lagerkasse reicht nicht, um das Lager hier zu gründen: Nötig sind {0} Groschen. Nichts wurde aufgestellt (dein Zelt selbst ist kostenlos).",
 "Le camp n'a pas pu naître :": "Das Lager konnte nicht entstehen:",
 "J'installe « {0} »": "Ich richte „{0}“ ein",
@@ -1495,5 +1495,6 @@
 "Armurier : il y montre son travail ; il vend 6 pièces d'armure par jour au lieu de 4.": "Rüstschmied: Er zeigt dort seine Arbeit; er verkauft 6 Rüstungsteile am Tag statt 4.",
 "Forge : le travail des flèches au taux de l'aide ; le carquois environ 2 gros moins cher ; un homme y répare des flèches.": "Schmiede: Pfeilarbeit zum Lohn des Gehilfen; der Köcher etwa 2 Groschen billiger; ein Mann repariert dort Pfeile.",
 "Moral : tant qu'elle est debout, un pillage du camp ou des caisses coûte moitié moins de moral ; aucun ralliement.": "Moral: Solange es steht, kostet eine Plünderung des Lagers oder der Kassen nur halb so viel Moral; kein Sammeln.",
-"Défense : plus de la moitié du tour du camp fermée, plus de vol de nuit, et la diversion des pillards arrive de front.": "Verteidigung: Ist mehr als die Hälfte des Lagerumfangs geschlossen, gibt es keine nächtlichen Diebstähle mehr, und das Ablenkungskommando kommt von vorn."
+"Défense : plus de la moitié du tour du camp fermée, plus de vol de nuit, et la diversion des pillards arrive de front.": "Verteidigung: Ist mehr als die Hälfte des Lagerumfangs geschlossen, gibt es keine nächtlichen Diebstähle mehr, und das Ablenkungskommando kommt von vorn.",
+"Refusé : au plus 1 000 000 gros par mouvement.": "Abgelehnt: höchstens 1.000.000 Groschen pro Vorgang."
 }

@@ -339,6 +339,9 @@ def heure(h: int, origine: int = 0) -> str:
     return T("jour {0}, {1:02d}:{2:02d}", j, s // 3600, (s % 3600) // 60)
 
 
+
+PLAFOND_PAR_MOUVEMENT = 1_000_000
+
 class Chiffre(QFrame):
     def __init__(self, titre: str) -> None:
         super().__init__()
@@ -641,6 +644,11 @@ class FenetreBanque(QWidget):
         n = int(montant) if montant else int(self.montant.value())
         if n <= 0:
             self.etat_caisse.setText(T("Choisis d'abord un montant."))
+            return
+
+
+        if n > PLAFOND_PAR_MOUVEMENT:
+            self.etat_caisse.setText(T("Refusé : au plus 1 000 000 gros par mouvement."))
             return
         self.etat_caisse.setText(T("je demande à la partie…"))
         QApplication.processEvents()

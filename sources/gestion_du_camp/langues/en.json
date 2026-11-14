@@ -601,7 +601,7 @@
 "Le jeu ne répond pas (25 s) : est-il en pause ou dans un menu ?": "The game isn't responding (25 s): is it paused or in a menu?",
 "Le camp n'est pas dressé : rien n'a bougé.": "The camp isn't set up: nothing has moved.",
 "Il n'y a pas encore de camp : pose d'abord TA tente (ou ta cabane), dans « Henry et le Directeur ». Le camp naît là où tu la poses.": "There is no camp yet: first pitch YOUR tent (or your cabin), under “Henry and the Director”. The camp begins where you place it.",
-"Il te faut d'abord la patente du camp : 30 000 gros, chez le notaire de Kuttenberg (devant l'hôtel de ville) ou de Troskowitz (dans la cour de l'hôtel de ville).": "You first need the camp charter: 30 000 groschen, from the notary in Kuttenberg (in front of the town hall) or in Troskowitz (in the town hall courtyard).",
+"Il te faut d'abord la patente du camp : 20 000 gros, chez le notaire de Kuttenberg (devant l'hôtel de ville) ou de Troskowitz (dans la cour de l'hôtel de ville).": "You first need the camp charter: 20 000 groschen, from the notary in Kuttenberg (in front of the town hall) or in Troskowitz (in the town hall courtyard).",
 "Le coffre du camp n'a pas assez pour fonder le camp ici : il faut {0} gros. Rien n'est posé (ta tente, elle, est gratuite).": "The camp chest hasn't enough to found the camp here: it takes {0} groschen. Nothing placed (your tent itself is free).",
 "Le camp n'a pas pu naître :": "The camp could not be founded:",
 "J'installe « {0} »": "Installing “{0}”",
@@ -1495,5 +1495,6 @@
 "Armurier : il y montre son travail ; il vend 6 pièces d'armure par jour au lieu de 4.": "Armourer: he displays his work there; he sells 6 pieces of armour a day instead of 4.",
 "Forge : le travail des flèches au taux de l'aide ; le carquois environ 2 gros moins cher ; un homme y répare des flèches.": "Forge: arrow work at the assistant's rate; the quiver about 2 groschen cheaper; a man repairs arrows there.",
 "Moral : tant qu'elle est debout, un pillage du camp ou des caisses coûte moitié moins de moral ; aucun ralliement.": "Morale: while it stands, a raid that loots the camp or the cash boxes costs half as much morale; no rallying.",
-"Défense : plus de la moitié du tour du camp fermée, plus de vol de nuit, et la diversion des pillards arrive de front.": "Defence: with more than half the camp's perimeter closed, no more night thefts, and the raiders' diversion comes from the front."
+"Défense : plus de la moitié du tour du camp fermée, plus de vol de nuit, et la diversion des pillards arrive de front.": "Defence: with more than half the camp's perimeter closed, no more night thefts, and the raiders' diversion comes from the front.",
+"Refusé : au plus 1 000 000 gros par mouvement.": "Refused: at most 1,000,000 groschen per transfer."
 }

@@ -601,7 +601,7 @@
 "Le jeu ne répond pas (25 s) : est-il en pause ou dans un menu ?": "游戏没有响应（25 秒）：它是否已暂停或停在菜单中？",
 "Le camp n'est pas dressé : rien n'a bougé.": "营地尚未搭建：没有任何变动。",
 "Il n'y a pas encore de camp : pose d'abord TA tente (ou ta cabane), dans « Henry et le Directeur ». Le camp naît là où tu la poses.": "还没有营地：请先在“亨利 与总管”中搭好你的帐篷（或小屋）。营地就建在你搭它的地方。",
-"Il te faut d'abord la patente du camp : 30 000 gros, chez le notaire de Kuttenberg (devant l'hôtel de ville) ou de Troskowitz (dans la cour de l'hôtel de ville).": "你需要先取得营地特许状：30 000 格罗申，找 库滕堡（市政厅前）或 特罗斯科维茨（市政厅院子里）的公证人购买。",
+"Il te faut d'abord la patente du camp : 20 000 gros, chez le notaire de Kuttenberg (devant l'hôtel de ville) ou de Troskowitz (dans la cour de l'hôtel de ville).": "你需要先取得营地特许状：20 000 格罗申，找 库滕堡（市政厅前）或 特罗斯科维茨（市政厅院子里）的公证人购买。",
 "Le coffre du camp n'a pas assez pour fonder le camp ici : il faut {0} gros. Rien n'est posé (ta tente, elle, est gratuite).": "营地金库的钱不够在这里建立营地：需要 {0} 格罗申。未放置任何东西（你的帐篷本身是免费的）。",
 "Le camp n'a pas pu naître :": "营地无法建立：",
 "J'installe « {0} »": "正在安装“{0}”",
@@ -1495,5 +1495,6 @@
 "Armurier : il y montre son travail ; il vend 6 pièces d'armure par jour au lieu de 4.": "军械师：在此展示手艺；每天出售6件护甲，而不是4件。",
 "Forge : le travail des flèches au taux de l'aide ; le carquois environ 2 gros moins cher ; un homme y répare des flèches.": "铁匠铺：制箭按助手工钱计算；箭袋便宜约2格罗申；一人在此修箭。",
 "Moral : tant qu'elle est debout, un pillage du camp ou des caisses coûte moitié moins de moral ; aucun ralliement.": "士气：旗帜竖立时，营地或钱箱被劫掠损失的士气减半；不作集结点。",
-"Défense : plus de la moitié du tour du camp fermée, plus de vol de nuit, et la diversion des pillards arrive de front.": "防御：营地一半以上的外围封闭后，不再有夜间偷窃，劫掠者的佯攻也从正面而来。"
+"Défense : plus de la moitié du tour du camp fermée, plus de vol de nuit, et la diversion des pillards arrive de front.": "防御：营地一半以上的外围封闭后，不再有夜间偷窃，劫掠者的佯攻也从正面而来。",
+"Refusé : au plus 1 000 000 gros par mouvement.": "已拒绝：每次最多 1,000,000 格罗申。"
 }

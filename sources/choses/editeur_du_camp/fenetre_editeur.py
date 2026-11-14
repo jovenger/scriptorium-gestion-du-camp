@@ -1666,7 +1666,7 @@ class Fenetre(QMainWindow):
                               f'{r["cap"]:.4f}))', "Je fonde ton camp ici")
             if rep is not None and rep.strip() == "patente":
 
-                self.etat.setText(T("Il te faut d'abord la patente du camp : 30 000 gros, chez le notaire de Kuttenberg "
+                self.etat.setText(T("Il te faut d'abord la patente du camp : 20 000 gros, chez le notaire de Kuttenberg "
                                   "(devant l'hôtel de ville) ou de Troskowitz (dans la cour de l'hôtel de ville)."))
                 return
             if rep is not None and rep.strip().startswith("coffre_"):
