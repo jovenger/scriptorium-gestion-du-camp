@@ -105,6 +105,10 @@ def installer(inst: jeu.Installation, version: str | None = None) -> ResultatIns
     from . import choses as _choses
     lua += _choses.lua_des_choses()
 
+    if _choses.POUR_LES_JOUEURS:
+        from . import sans_essais as _sans_essais
+        lua = _sans_essais.sans_crochets_de_mesure(lua)
+
 
 
 

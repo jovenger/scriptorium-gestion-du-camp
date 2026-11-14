@@ -26,6 +26,8 @@ LIVRE = _chemins.dossier_local() / "banque.json"
 
 MOUVEMENTS = {
     "butin": ("Butin des batailles", True),
+
+    "camp_de_bandits": ("Butin d'un camp de bandits", True),
     "rations": ("Vivres pris sur les corps", True),
     "repas": ("Repas payés par les hommes", True),
     "boisson": ("Boissons payées par les hommes", True),
@@ -812,7 +814,7 @@ def achats_par_semaine(fiches: list[dict], payes: list) -> list[dict]:
 
 EFFET_AU_COFFRE = {
     "repas": 1, "boisson": 1, "arme": 1, "fleches": 1, "bain": 1, "forge": 1, "achat": 1, "dettes": 1,
-    "revente": 1, "butin": 1, "depot": 1, "commission": 1,
+    "revente": 1, "butin": 1, "depot": 1, "commission": 1, "camp_de_bandits": 1,
     "payes": -1, "femmes": -1, "forgeron": -1, "matieres": 0, "courses": -1, "embauche": -1, "primes": -1,
     "postes": -1, "henry": -1, "retrait": -1, "service": -1, "rations": 0,
     "vente": 0, "taxe": 1, "impot": 1, "fournitures": 1, "avances": -1, "provisions": -1, "fonds": -1, "ausac": -1,
