@@ -700,6 +700,27 @@ def objets_du_camp() -> list[dict]:
          "pieces": [_modele("Objects/manmade/structures/defensive/walls/palisade/palisade_wall_b_v4.cgf", x=3.85, y=-0.12)]},
         {"cle": "porte_palissade", "nom": "Porte de palissade", "source": "mod",
          "pieces": [_modele("Objects/manmade/structures/logistical/fences/fence_4rod_gate_02.cgf", x=-1.48, rz=-1.5708)]},
+
+
+
+
+
+
+
+        {"cle": "grande_palissade", "nom": "Grande palissade, un pan (8 m)", "source": "mod",
+         "pieces": [_modele("Objects/manmade/structures/defensive/walls/palisade/palisade_wall_a_v3.cgf",
+                            x=round(-0.175 + 2.75 * k, 3), y=0.16) for k in (-1, 0, 1)]},
+        {"cle": "grande_porte_palissade", "nom": "Grande porte de palissade", "source": "mod",
+         "pieces": [dict(_modele("Objects/manmade/structures/logistical/gate/gate_wooden_d.cgf", x=-0.03),
+                         s=(1.07, 1.07, 1.07))]},
+
+
+
+
+        {"cle": "bout_palissade", "nom": "Bout de palissade (3,7 m)", "source": "mod",
+         "pieces": [_modele("Objects/manmade/structures/defensive/walls/palisade/palisade_wall_b_v5.cgf", x=1.39, y=-0.19)]},
+        {"cle": "bout_grande_palissade", "nom": "Bout de grande palissade (un rondin)", "source": "mod",
+         "pieces": [_modele("Objects/manmade/structures/defensive/walls/palisade/palisade_wall_a_v3.cgf", x=-0.175, y=0.16)]},
         {"cle": "tente_hommes", "nom": "Tente des hommes (4 lits)", "source": "mod",
          "pieces": [_modele(TENTE_HOMMES)] + lits},
 

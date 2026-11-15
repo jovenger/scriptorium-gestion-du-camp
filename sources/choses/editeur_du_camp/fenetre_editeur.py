@@ -473,7 +473,8 @@ ORGANISATION = [
 
     ("Justice du camp", ["pilori"]),
 
-    ("Défense du camp", ["tour_de_guet", "palissade", "porte_palissade", "pieux", "brasero"]),
+    ("Défense du camp", ["tour_de_guet", "palissade", "porte_palissade", "grande_palissade", "grande_porte_palissade", "pieux",
+                         "brasero"]),
     ("Feu, cuisine, boisson", ["feu_camp", "feu_de_chambree", "*Feu, cuisine, boisson"]),
     ("S'asseoir et manger", ["*S'asseoir et manger"]),
     ("Installations et loisirs", ["place:des", "place:des2"] + ["place:" + n for n in INSTALLATIONS_POSABLES]),
@@ -485,6 +486,8 @@ ORGANISATION = [
     ("Lumière", ["*Lumière"]),
 ]
 CACHES = {"rond_marchand", "rond_client",
+
+          "bout_palissade", "bout_grande_palissade",
 
           "cible_pres", "cible_moyen", "cible_loin", "cible_tres_loin",
 
@@ -503,6 +506,8 @@ REFUS_DE_POSE = {
     "inconnu": "Cet objet n'est pas connu du mod installé : mettez le mod à jour (le programme et le mod doivent être de la même version).",
     "pas_de_camp": "Le camp n'est pas dressé : rien n'est posé.",
     "pas_pose": "Le jeu n'a pas pu poser l'objet à cette place : essayez un peu plus loin.",
+
+    "chemin": "Pas sur un chemin : les gens doivent pouvoir passer.",
     "a_acheter": "Cette installation s'achète d'abord : page « Construire ».",
 
     "pose_ta_tente_d_abord": "Il n'y a pas encore de camp : pose d'abord ta tente.",

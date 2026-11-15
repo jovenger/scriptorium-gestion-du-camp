@@ -75,6 +75,13 @@ do
 		tente_foret_lit = 200, tente_chevaliers = 300,
 
 		palissade = 400, porte_palissade = 1000,
+
+
+
+		grande_palissade = 900, grande_porte_palissade = 2000,
+
+
+		bout_palissade = 200, bout_grande_palissade = 300,
 		decor_cart_with_water = 300, decor_cart_with_things = 300, decor_tent_with_goods_dealer = 300,
 		decor_canopy_small_shop = 150, decor_stash_industriall_with_firewood = 150, decor_stash_industriall_with_crates = 150,
 		decor_stash_industriall_with_sacks = 150, decor_stash_forest_with_barrels = 150,
