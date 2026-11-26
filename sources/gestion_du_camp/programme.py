@@ -353,6 +353,12 @@ class GestionDuCamp(QWidget):
         rv.addWidget(self.bourse)
         rv.addSpacing(6)
 
+        reglages = QPushButton(T("Réglages du mod"))
+        reglages.setCursor(Qt.CursorShape.PointingHandCursor)
+        reglages.clicked.connect(self.ouvrir_les_reglages)
+        rv.addWidget(reglages)
+        rv.addSpacing(6)
+
         self.liste_des_langues = QComboBox()
         self.liste_des_langues.addItem(T("Langue du jeu"), lg.PAR_LE_JEU)
         for code, nom_l in lg.NOMS.items():
@@ -559,8 +565,22 @@ class GestionDuCamp(QWidget):
         except Exception:
             pass
 
+    def ouvrir_les_reglages(self) -> None:
+        _module("reglages_du_mod", Path(__file__).with_name("reglages_du_mod.py")).ReglagesDuMod(self).exec()
+
 
     def _voir_la_pause(self) -> None:
+
+
+
+        retire = _mod_retire()
+        self.pile.setEnabled(not retire)
+        if retire:
+            from noyau import partie_en_pause
+            self._pause.setText(T(partie_en_pause.TEXTE_RETIRE))
+            self._pause.show()
+            self.setWindowTitle(T("Gestion du camp — MOD RETIRÉ DE CETTE PARTIE"))
+            return
         sens = _sens_de_la_pause()
         if sens:
             from noyau import partie_en_pause
@@ -755,6 +775,17 @@ def cacher(f) -> None:
     from noyau.premier_plan import rendre_au_jeu
     f.hide()
     rendre_au_jeu()
+
+
+def _mod_retire() -> bool:
+    try:
+        racine = str(Path(__file__).resolve().parents[1])
+        if racine not in sys.path:
+            sys.path.insert(0, racine)
+        from noyau import partie_en_pause
+        return partie_en_pause.retire() is True
+    except Exception:
+        return False
 
 
 def _sens_de_la_pause() -> str | None:

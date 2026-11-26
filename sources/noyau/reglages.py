@@ -1375,7 +1375,7 @@ def construire_ptf_capuches(pak_tables: Path, toujours: bool = False
     ), len(blocs)
 
 
-def manifeste(nom: str, version: str, description: str) -> str:
+def manifeste(nom: str, version: str, description: str, affiche: str | None = None) -> str:
     ""
 
 
@@ -1391,7 +1391,7 @@ def manifeste(nom: str, version: str, description: str) -> str:
         '<?xml version="1.0" encoding="utf-8"?>\n'
         "<kcd_mod>\n"
         "  <info>\n"
-        f"    <name>{nom}</name>\n"
+        f"    <name>{affiche or nom}</name>\n"
         f"    <modid>{identifiant}</modid>\n"
         f"    <description>{description}</description>\n"
         "    <author>Scriptorium</author>\n"

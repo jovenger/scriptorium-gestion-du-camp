@@ -971,8 +971,13 @@ class FenetreBanque(QWidget):
             libelle = mod.MOUVEMENTS.get(mv["code"], (mv["code"], True))[0]
             entre = effet.get(mv["code"], 0) > 0
             cellule(self.t_mvt, r_, 0, heure(mv["h"], origine))
-            cellule(self.t_mvt, r_, 1, phrase_du_coffre(mv, libelle, noms, _pct_h))
-            cellule(self.t_mvt, r_, 2, gros(mv["gros"] if entre else -mv["gros"], True), VERT if entre else ROUGE)
+            phrase = phrase_du_coffre(mv, libelle, noms, _pct_h)
+            if mv["gros"] < 0:
+                phrase = (T("Embauche remboursée : la recrue n'est pas arrivée") if mv["code"] == "embauche"
+                          else T("{0} (remboursement)", phrase))
+            montant = mv["gros"] if entre else -mv["gros"]
+            cellule(self.t_mvt, r_, 1, phrase)
+            cellule(self.t_mvt, r_, 2, gros(montant, True), VERT if montant >= 0 else ROUGE)
             cellule(self.t_mvt, r_, 3, gros(solde_de[i]) if i in solde_de else "—")
 
 

@@ -134,8 +134,10 @@ class OngletNomDuCamp(QWidget):
         entete = QLabel(T("Le nom du camp"))
         entete.setObjectName("Entete")
         v.addWidget(entete)
-        expl = QLabel(T("Dans le jeu, le menu U (« Nommer le camp ») choisit un nom dans la liste : c'est lui qui va sur la "
-                        "carte et la boussole. Ici, vous pouvez écrire votre propre nom : il remplace celui de la liste dans "
+
+
+        expl = QLabel(T("Dans le jeu, le menu du mod (la touche U, ou celle que vous avez choisie), à « Nommer le camp », "
+                        "choisit un nom dans la liste : c'est lui qui va sur la carte et la boussole. Ici, vous pouvez écrire votre propre nom : il remplace celui de la liste dans "
                         "le bandeau d'arrivée au camp, les notes du Directeur et ce programme. Renommer est gratuit, à tout "
                         "moment."))
         expl.setObjectName("Note")

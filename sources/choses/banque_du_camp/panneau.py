@@ -29,6 +29,10 @@ MOUVEMENTS = {
 
     "camp_de_bandits": ("Butin d'un camp de bandits", True),
 
+    "entretien": ("Entretien des tentes (hors bénéfice)", False),
+    "mortrevendu": ("Équipement d'un mort revendu (hors bénéfice)", True),
+    "viedirecteur": ("De quoi vivre du Directeur, pris au coffre (hors bénéfice)", False),
+
     "ecole_d_armes": ("Formation à l'école d'armes", False),
     "rations": ("Vivres pris sur les corps", True),
     "repas": ("Repas payés par les hommes", True),
@@ -125,7 +129,9 @@ SORTIES_DU_BENEFICE = ("payes", "femmes", "forgeron", "henry", "matieres", "cour
 CAPITAL = ("depot", "retrait")
 
 
-NATURE = ("rations", "vente", "porteurs", "caisse_atelier", "prime_caisse", "prime_henry", "prime_versee")
+NATURE = ("rations", "vente", "porteurs", "caisse_atelier", "prime_caisse", "prime_henry", "prime_versee",
+
+          "entretien", "mortrevendu", "viedirecteur")
 
 RESERVES = ("vivres", "boisson", "savon", "fer", "charbon", "garde", "pommeau", "rivets", "tissu", "cuir",
             "tr_armes", "tr_armure", "tr_habits", "tr_bottes", "bois", "pansements", "branches", "graines", "biere", "vin", "acier", "acier_fin", "sel", "fourrage", "viande")
@@ -305,7 +311,8 @@ def appliquer(livre: dict, texte: str, deja: dict | None = None, etats: bool = T
         return True
     if genre == "mvt":
 
-        p = re.match(r"(\d+)-([a-z]+)-(\d+)-(\d+)(?:-([A-Za-z0-9]+))?", reste)
+
+        p = re.match(r"(\d+)-([a-z]+)-(-?\d+)-(-?\d+)(?:-([A-Za-z0-9]+))?", reste)
         if not p or p.group(2) not in CODES_SANS_SOULIGNE:
             return True
         mv = {"h": int(p.group(1)), "code": CODES_SANS_SOULIGNE[p.group(2)], "gros": int(p.group(3)),
@@ -815,6 +822,7 @@ def achats_par_semaine(fiches: list[dict], payes: list) -> list[dict]:
 
 
 EFFET_AU_COFFRE = {
+    "entretien": -1, "mortrevendu": 1, "viedirecteur": -1,
     "repas": 1, "boisson": 1, "arme": 1, "fleches": 1, "bain": 1, "forge": 1, "achat": 1, "dettes": 1,
     "revente": 1, "butin": 1, "depot": 1, "commission": 1, "camp_de_bandits": 1, "ecole_d_armes": -1,
     "payes": -1, "femmes": -1, "forgeron": -1, "matieres": 0, "courses": -1, "embauche": -1, "primes": -1,

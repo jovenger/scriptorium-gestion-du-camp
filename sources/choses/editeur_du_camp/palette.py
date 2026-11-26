@@ -594,6 +594,18 @@ ETAL = "Objects/manmade/structures/municipal/trading/shop_rustic_b.cgf"
 AUBERGE = "objects/manmade/"
 
 
+def etal_du_marche(x: float = 0.0) -> dict:
+    ""
+
+
+
+
+    import math as _m
+    x0, x1, y0, y1 = BOITES[ETAL.lower()]
+    return {"m": ETAL, "x": round(x + x0 + x1, 3), "y": round(y0 + y1, 3), "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": _m.pi,
+            "s": (1.0, 1.0, 1.0)}
+
+
 def place_hors_des_meubles(objet: dict, marge: float = MARGE_DU_CORPS) -> tuple[list[str], list[str]]:
     ""
 
@@ -747,7 +759,7 @@ def objets_du_camp() -> list[dict]:
                     for m, fwd, lat, up, rx, ry, rz in POSTE_DE_CHASSE]
 
 
-                   + ajout([{"m": ETAL, "x": 4.5, "y": 0.0, "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (1.0, 1.0, 1.0)}]
+                   + ajout([etal_du_marche(4.5)]
                            + aplatir("exteriorDecoration/camp_supplies/rope_with_fur", (6.7, 0.6, 0.0))
                            + [dict(place_de_vendeur(), x=4.5)])},
 
@@ -834,19 +846,19 @@ def objets_du_camp() -> list[dict]:
 
 
         {"cle": "etal_jardiniers", "nom": "Étal du jardinier (vente des légumes)", "source": "jeu",
-         "pieces": [{"m": ETAL, "x": 0.0, "y": 0.0, "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (1.0, 1.0, 1.0)}]
+         "pieces": [etal_du_marche()]
                    + aplatir("stash/basket_vegetables_a", (-0.55, 0.55, 0.95))
                    + aplatir("stash/basket_vegetables_b", (0.55, 0.55, 0.95))
                    + [place_de_vendeur()]},
         {"cle": "etal_bucheron", "nom": "Étal du bûcheron (vente du bois, des branches et du charbon)", "source": "jeu",
-         "pieces": [{"m": ETAL, "x": 0.0, "y": 0.0, "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (1.0, 1.0, 1.0)}]
+         "pieces": [etal_du_marche()]
                    + aplatir("interiordecoration/crates/crate_with_firewood", (-1.6, 0.2, 0.0))
                    + aplatir("interiordecoration/crates/crate_with_firewood", (1.6, 0.2, 0.0))
                    + [place_de_vendeur()]},
 
 
         {"cle": "etal_chasseurs", "nom": "Étal des chasseurs (vente du gibier et des peaux)", "source": "jeu",
-         "pieces": [{"m": ETAL, "x": 0.0, "y": 0.0, "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (1.0, 1.0, 1.0)}]
+         "pieces": [etal_du_marche()]
                    + aplatir("exteriorDecoration/camp_supplies/rope_with_fur", (2.2, 0.6, 0.0))
                    + [place_de_vendeur()]},
 
@@ -854,7 +866,7 @@ def objets_du_camp() -> list[dict]:
 
 
         {"cle": "etal_taverne", "nom": "Étal du tavernier (bière et vin au verre)", "source": "jeu",
-         "pieces": [{"m": ETAL, "x": 0.0, "y": 0.0, "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (1.0, 1.0, 1.0)}]
+         "pieces": [etal_du_marche()]
                    + [{"m": AUBERGE + f, "x": x, "y": y, "z": z, "rx": 0.0, "ry": 0.0, "rz": rz, "s": (1.0, 1.0, 1.0)}
                       for f, x, y, z, rz in (
                           ("common_furniture/barrels/barrel_beer.cgf", -1.9, 1.0, 0.0, 0.0),
@@ -872,7 +884,7 @@ def objets_du_camp() -> list[dict]:
 
 
         {"cle": "comptoir_bains", "nom": "Comptoir de la Dame des bains (on la paie ici)", "source": "jeu",
-         "pieces": [{"m": ETAL, "x": 0.0, "y": 0.0, "z": 0.0, "rx": 0.0, "ry": 0.0, "rz": 0.0, "s": (1.0, 1.0, 1.0)},
+         "pieces": [etal_du_marche(),
                     place_de_vendeur()]},
 
 

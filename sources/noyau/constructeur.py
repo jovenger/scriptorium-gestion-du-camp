@@ -16,6 +16,11 @@ from pathlib import Path
 from . import archives, jeu, reglages
 
 NOM_MOD = "scriptorium"
+
+
+
+
+NOM_AFFICHE = "Scriptorium"
 RACINE_PROJET = Path(__file__).resolve().parent.parent
 SOURCE_LUA = RACINE_PROJET / "agent" / "scriptorium.lua"
 
@@ -303,8 +308,26 @@ def installer(inst: jeu.Installation, version: str | None = None) -> ResultatIns
             if deja:
                 raise ValueError(f"le socle et Scriptorium livrent tous deux {sorted(deja)} dans {nom_pak}")
             nos_textes.setdefault(nom_pak, {}).update(siens)
+
+
+
+
+
+    anglais_tire = "French_xml.pak" in nos_textes and "English_xml.pak" in nos_textes
     for nom_pak in sorted(nos_textes):
+        if anglais_tire and nom_pak == "English_xml.pak":
+            continue
         archives.ecrire_pak(jeu.cible_reelle(dossier_loc / nom_pak), nos_textes[nom_pak])
+    if anglais_tire:
+        import io as _io
+        import zipfile as _zipfile
+        from . import traductions
+
+
+
+        octets = traductions.traduire_le_pak(jeu.cible_reelle(dossier_loc / "French_xml.pak"), "en", None)
+        with _zipfile.ZipFile(_io.BytesIO(octets)) as z:
+            archives.ecrire_pak(jeu.cible_reelle(dossier_loc / "English_xml.pak"), {n: z.read(n) for n in z.namelist()})
 
 
 
@@ -354,7 +377,8 @@ def installer(inst: jeu.Installation, version: str | None = None) -> ResultatIns
     manifeste = jeu.cible_reelle(dossier / "mod.manifest")
     manifeste.write_text(
         reglages.manifeste(
-            NOM_MOD, version, "Panneau de controle Scriptorium -- agent embarque"
+            NOM_MOD, version, "Panneau de controle Scriptorium -- agent embarque",
+            affiche=NOM_AFFICHE,
         ),
         encoding="utf-8",
     )
